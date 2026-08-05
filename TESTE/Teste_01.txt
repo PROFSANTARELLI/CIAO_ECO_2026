@@ -1,0 +1,53 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+
+# Implementação matemática completa da Função Ackley 2D
+def ackley(x, y):
+    termo1 = -20.0 * np.exp(-0.2 * np.sqrt(0.5 * (x**2 + y**2)))
+    termo2 = -np.exp(0.5 * (np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y)))
+    return termo1 + termo2 + np.e + 20.0
+
+# Parâmetros da simulação
+np.random.seed(42)
+NUM_TENTATIVAS = 2000
+LIXO_MIN, LIXO_MAX = -32.768, 32.768
+
+melhor_custo = float('inf')
+melhor_x, melhor_y = None, None
+historico = []
+
+inicio = time.time()
+
+# Loop de busca aleatória
+for _ in range(NUM_TENTATIVAS):
+    x_cand = np.random.uniform(LIXO_MIN, LIXO_MAX)
+    y_cand = np.random.uniform(LIXO_MIN, LIXO_MAX)
+    
+    custo_atual = ackley(x_cand, y_cand)
+    
+    if custo_atual < melhor_custo:
+        melhor_custo = custo_atual
+        melhor_x, melhor_y = x_cand, y_cand
+        
+    historico.append(melhor_custo)
+
+fim = time.time()
+
+# Exibição dos resultados finais
+print("=== RESULTADOS DA BUSCA ALEATÓRIA (FUNÇÃO ACKLEY) ===")
+print(f"Melhor Coordenada X : {melhor_x:.5f}")
+print(f"Melhor Coordenada Y : {melhor_y:.5f}")
+print(f"Menor Custo Obtido  : {melhor_custo:.5f} (Ideal: 0.0)")
+print(f"Tempo de Execução   : {(fim - inicio)*1000:.2f} ms")
+
+# Plota a curva de convergência
+plt.figure(figsize=(8, 4))
+plt.plot(historico, color='blue', linewidth=2, label="Busca Aleatória")
+plt.axhline(y=0, color='red', linestyle='--', label="Ótimo Global (f=0)")
+plt.title("Convergência na Função Ackley")
+plt.xlabel("Tentativas")
+plt.ylabel("Melhor Custo Encontrado")
+plt.legend()
+plt.grid(True)
+plt.show()
