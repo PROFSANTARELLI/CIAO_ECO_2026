@@ -1,3 +1,6 @@
+#FUNÇÃO: f(x,y) = 20 + (x² - 10·cos(2π·x)) + (y² - 10·cos(2π·y))
+#MÍNIMO GLOBAL: (0, 0) com f(0,0) = 0
+
 # Importa a biblioteca NumPy para manipulação de matrizes e cálculos matemáticos vetoriais
 import numpy as np
 
