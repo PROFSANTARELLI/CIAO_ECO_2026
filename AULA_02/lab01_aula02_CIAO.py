@@ -41,6 +41,7 @@ for combinacao in itertools.product([0, 1], repeat=n):
       melhor_valor = valor_total
       melhor_combinacao = combinacao
 fim = time.time() # marca o tempo de fim
+
 # ----------------------------------------------------------
 # 3. MOSTRANDO OS RESULTADOS
 # ----------------------------------------------------------
