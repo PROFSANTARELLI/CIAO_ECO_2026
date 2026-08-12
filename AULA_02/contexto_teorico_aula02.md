@@ -1,5 +1,5 @@
 Objetivos da Aula:
-1.	Explicar com suas proprias palavras o que e um problema de otimizacao e quais sao seus tres elementos principais.
+1.	Explicar o que é um problema de otimizacao e quais sao seus tres elementos principais.
 2.	Dizer por que alguns problemas ficam impossiveis de resolver por forca-bruta quando o tamanho cresce um pouco.
 3.	Diferenciar um metodo que garante a melhor solucao possivel de um metodo que busca uma solucao “boa o suficiente” de forma rapida.
 4.	Calcular e interpretar o “gap” (diferenca percentual) entre uma solucao heuristica e a solucao otima.
