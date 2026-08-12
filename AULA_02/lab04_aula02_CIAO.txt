@@ -1,0 +1,34 @@
+Atividade 4 — DO ZERO: Modelagem de um Problema Real
+
+1 - Objetivo da atividade: aplicar os conceitos da aula a um problema que faca sentido para ele, consolidando a aprendizagem.
+Tarefa:
+Escolha um problema real do seu cotidiano, da sua area de trabalho ou de interesse
+(exemplos: montar a grade de horarios da faculdade, escolher quais pedidos atender em um dia, rotear entregas, alocar pessoas em projetos, montar a lista de compras com orcamento limitado, etc.).
+
+2 - Entregar um relatorio curto de 1–2 paginas + codigo.
+Descricao clara do problema em linguagem natural.
+Modelagem formal contendo:
+•	O que e uma solucao (como voce representa uma solucao candidata).
+•	Qual e o espaco de busca (quantas solucoes existem aproximadamente?).
+•	Qual e a funcao objetivo (o que voce quer maximizar ou minimizar?).
+•	Quais sao as restricoes (o que torna uma solucao invalida?).
+
+3 - Classificacao: voce considera este problema “facil” (existe metodo rapido e exato) ou “dificil” (parece NP-dificil)? Justifique de forma simples.
+Um codigo Python que:
+•	Gera pelo menos uma solucao aleatoria (factivel ou nao).
+•	Calcula o valor da funcao objetivo dessa solucao.
+•	Verifica se a solucao respeita as restricoes.
+
+4 - Sugestoes de problemas para quem estiver sem ideia
+•	Escolher quais materias cursar no proximo semestre (respeitando pre-requisitos e carga horaria maxima).
+•	Montar a lista de compras do mes com orcamento limitado, maximizando “utilidade”.
+•	Alocar alunos em grupos de trabalho com restricoes de preferencia e equilibrio de habilidades.
+•	Definir a ordem de atendimento de pacientes em um pronto-socorro (minimizar tempo medio de espera ou gravidade acumulada).
+•	Escolher quais filmes/series assistir no fim de semana maximizando satisfacao com limite de tempo.
+
+5 - Criterios de avaliacao desta atividade
+•	Clareza da modelagem (espaco de busca, objetivo e restricoes bem definidos).
+•	Coerencia entre a descricao e o codigo.
+•	Qualidade da justificativa sobre a dificuldade do problema.
+•	Criatividade e relevancia do problema escolhido (nao e o mais importante, mas valoriza).
+
