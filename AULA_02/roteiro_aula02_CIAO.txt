@@ -38,3 +38,5 @@ PASSO 4: Execução do zero
 4 - Colete os resultados desta execução.
 5 - Coloque no arquivo "resultados_aula02.md" na sequência do resultado anterior.
 6 - Construa e insira as considerações da dupla/trio sobre a compreensão dos resultados obtidos.
+
+As entregas completas e corretas desta primeira ETAPA AC-1 confere às duplas/trio o valor máximo de 0,25 de 0,75 possíveis para esta primeira AC.
