@@ -32,7 +32,7 @@ PASSO 3: Execução código semi-pronto
 
 
 PASSO 4: Execução do zero
-1 - Copiar para o seu repositório o arquivo: lab04_aula02_CIAO.py
+1 - Copiar para o seu repositório o arquivo: lab04_aula02_CIAO.txt
 2 - Leia com atenção a proposta da atividade 
 3 - Rode o código na sua IDE e salvar o arquivo com extensão IPYNB (exemplo: lab04_aula02.ipynb) no diretório AULA_02 do seu respositório
 4 - Colete os resultados desta execução.
