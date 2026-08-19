@@ -51,3 +51,26 @@ plt.ylabel("Melhor Custo Encontrado")
 plt.legend()
 plt.grid(True)
 plt.show()
+
+
+
+
+
+# TODO 1: Converter bits para x real
+def bits_para_x(bits):
+    decimal = 0
+    for i, bit in enumerate(reversed(bits)):
+        decimal += bit * (2 ** i)
+    return X_MIN + (decimal / (2**BITS - 1)) * (X_MAX - X_MIN)
+
+# TODO 2: Calcular fitness
+def fitness(individuo):
+    x = bits_para_x(individuo)
+    return funcao_objetivo(x)  # Já é maximização
+
+# TODO 3: Mutação
+def mutacao(individuo):
+    for i in range(len(individuo)):
+        if random.random() < TAXA_MUT:
+            individuo[i] = 1 - individuo[i]
+    return individuo
