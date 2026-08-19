@@ -30,12 +30,4 @@ PASSO 3: LAB-03 - Execução código semi-pronto
 6 - Insira as considerações da dupla/trio sobre a compreensão dos resultados obtidos.
 
 
-PASSO 4: LAB-04 - Execução do zero
-1 - Copiar para o seu repositório o arquivo: lab04_aula03_CIAO.txt
-2 - Leia com atenção a proposta da atividade 
-3 - Rodar o código na sua IDE e salvar o arquivo como lab04_aula03.ipynb no diretório AULA_03 do SEU respositório oficial
-4 - Colete os resultados desta execução.
-5 - Coloque no arquivo "resultados_aula03.md" na sequência do resultado anterior.
-6 - Construa e insira as considerações da dupla/trio sobre a compreensão dos resultados obtidos.
-
 As entregas completas e corretas desta SEGUNDA ETAPA AC-1 confere às duplas/trio o valor de até 0,25, estando todas as entregas realizadas e corretas.
