@@ -76,3 +76,30 @@ def mutacao(individuo):
     return individuo
 
 
+
+PASSO 1: LAB-01
+1 - Acompanhar a explicação e o código exemplo que será desenvolvido pelo professor no início da aula
+2 - Abrir o arquivo lab01_aula04_CIAO.py no repositório do professor ( https://github.com/PROFSANTARELLI/CIAO_ECO_2026/tree/main/AULA_04 )
+3 - Após explicação, rodar o código na sua IDE (professor sugere o Google Colab) e salvar o arquivo como lab01_aula04.ipynb no diretório AULA_04 do SEU respositório oficial
+4 - Criar um arquivo chamado "resultados_aula04.md" e coletar os resultados desta execução. Após os resultados, insira as considerações da dupla/trio sobre a compreensão dos resultados obtidos.
+
+
+PASSO 2: LAB-02
+1 - Leia com atenção a proposta da atividade 
+2 - Abrir o arquivo lab02_aula04_CIAO.py no repositório do professor ( https://github.com/PROFSANTARELLI/CIAO_ECO_2026/tree/main/AULA_04 )
+3 - rodar o código na sua IDE e salvar o arquivo como lab02_aula04.ipynb no diretório AULA_04 do SEU respositório oficial
+4 - Colete os resultados desta execução.
+5 - Coloque no arquivo "resultados_aula04.md" a saída (output) na sequência do resultado anterior.
+6 - Insira as considerações da dupla/trio sobre a compreensão dos resultados obtidos.
+
+
+PASSO 3: LAB-03
+1 - Leia com atenção a proposta da atividade 
+2 - Abrir o arquivo lab03_aula04_CIAO.py no repositório do professor ( https://github.com/PROFSANTARELLI/CIAO_ECO_2026/tree/main/AULA_04 )
+3 - rodar o código na sua IDE e salvar o arquivo como lab03_aula04.ipynb no diretório AULA_04 do SEU respositório oficial
+4 - Colete os resultados desta execução.
+5 - Coloque no arquivo "resultados_aula04.md" a saída (output) na sequência do resultado anterior.
+6 - Insira as considerações da dupla/trio sobre a compreensão dos resultados obtidos.
+
+
+
