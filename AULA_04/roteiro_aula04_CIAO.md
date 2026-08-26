@@ -3,6 +3,7 @@ AULA 03 AC-1 - PARTE FINAL
 Para isso, é necessário obrigatoriamente que:
 - Tenha finalizado todos os laboratórios da AC-1 PARTE 1 e PARTE 2
 - Leia atentamento os passos deste roteiro.
+- Criar o diretorio AULA_04 para guardar todas as entregas de hoje.
 
 As entregas completas e corretas desta ETAPA FINAL AC-1 confere às duplas/trio o valor de até 0,25, estando todas as entregas realizadas e corretas.
 
