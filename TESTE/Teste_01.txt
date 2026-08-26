@@ -74,3 +74,5 @@ def mutacao(individuo):
         if random.random() < TAXA_MUT:
             individuo[i] = 1 - individuo[i]
     return individuo
+
+
