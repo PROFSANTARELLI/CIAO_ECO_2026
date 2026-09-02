@@ -68,3 +68,8 @@ Resultado esperado:
 - Redução no tempo de resposta a vulnerabilidades
 - Código aberto com documentação e CI/CD
 - Apresentação técnica
+
+
+
+<img width="1727" height="324" alt="image" src="https://github.com/user-attachments/assets/6c26ef25-4b95-4663-93de-4349f8c1e484" />
+
