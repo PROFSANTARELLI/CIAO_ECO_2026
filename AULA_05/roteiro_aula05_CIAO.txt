@@ -1,0 +1,723 @@
+INICIANDO AC-2
+
+Datas: 02/09 (0,25) | 09/09 (0,25) | 16/09 (0,25)
+
+AC-2 PARTE 1
+
+ENTREGÁVEIS:
+- 1 Arquivo .ipynb para todas as missões
+- 1 Arquivo resultados_aula.md com os outputs e relatório final
+
+CENÁRIO GERAL DAS MISSÕES:
+Uma consultoria de Engenharia Tecnologiza especializada em otimização de sistemas foi contratada para ajudar uma empresa de logística a resolver um problema crítico que possuem há muito tempo. Eles precisam otimizar a localização de seus 5 centros de distribuição para minimizar o custo total de entrega para seus clientes.
+
+Dados Gerais:
+ - 50 clientes espalhados em uma região
+ - Cada centro de distribuição pode atender qualquer cliente
+ - Custo de entrega = distância × quantidade de produtos
+ - Cada cliente tem uma demanda específica
+
+Objetivo: Encontrar as coordenadas (x, y) dos 5 centros que minimizam o custo total de entrega.
+
+Por que o PSO é a escolha certa?
+O problema tem variáveis contínuas (coordenadas x, y). O espaço de busca é grande (5 centros × 2 coordenadas = 10 variáveis). Precisam de uma solução rápida e eficiente.
+
+
+MISSÃO 1: O PSO BÁSICO (PARTÍCULA ÚNICA)
+Objetivo: Entender como uma única partícula se move.
+Descrição: código que simula uma única partícula em 1D (uma dimensão). Complete a função de atualização de posição.
+
+"""
+MISSÃO 1: A PARTÍCULA SOLITÁRIA
+Cenário: Uma partícula procurando o mínimo de f(x) = x²
+Domínio: x ∈ [-10, 10]
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+from IPython.display import clear_output
+import time
+
+# ==================== CONFIGURAÇÕES ====================
+ITERACOES = 20
+W = 0.8
+C1 = 1.5
+C2 = 1.5
+LIMITE = 10
+
+# ==================== FUNÇÃO OBJETIVO ====================
+def funcao(x):
+    return x**2  # Mínimo em x=0
+
+# ==================== PSO UMA PARTÍCULA ====================
+# Inicializar
+posicao = random.uniform(-LIMITE, LIMITE)
+velocidade = random.uniform(-1, 1)
+fitness = funcao(posicao)
+
+pBest_pos = posicao
+pBest_fit = fitness
+
+# gBest é o mesmo que pBest (só uma partícula)
+gBest_pos = posicao
+gBest_fit = fitness
+
+historico_pos = [posicao]
+historico_fit = [fitness]
+
+print("=" * 60)
+print(" PARTÍCULA SOLITÁRIA PROcurando o MÍNIMO")
+print("=" * 60)
+print(f"\nPosição inicial: {posicao:.4f}")
+print(f"Fitness inicial: {fitness:.4f}\n")
+
+for i in range(ITERACOES):
+    # TODO 1: Atualizar velocidade
+    r1 = random.random()
+    r2 = random.random()
+    
+    # Fórmula: v_novo = w * v_atual + c1 * r1 * (pBest - pos) + c2 * r2 * (gBest - pos)
+    # SEU CÓDIGO AQUI
+    velocidade_nova = 0  # Substitua pela fórmula correta
+    
+    # TODO 2: Atualizar posição
+    # Fórmula: pos_nova = pos_atual + v_novo
+    # SEU CÓDIGO AQUI
+    posicao_nova = 0  # Substitua pela fórmula correta
+    
+    # Garantir limites
+    posicao_nova = np.clip(posicao_nova, -LIMITE, LIMITE)
+    
+    # Avaliar
+    fitness_novo = funcao(posicao_nova)
+    
+    # Atualizar variáveis
+    posicao = posicao_nova
+    velocidade = velocidade_nova
+    fitness = fitness_novo
+    
+    # Atualizar pBest
+    if fitness < pBest_fit:
+        pBest_fit = fitness
+        pBest_pos = posicao
+    
+    # Atualizar gBest (mesmo que pBest, só uma partícula)
+    if fitness < gBest_fit:
+        gBest_fit = fitness
+        gBest_pos = posicao
+    
+    # Guardar histórico
+    historico_pos.append(posicao)
+    historico_fit.append(fitness)
+    
+    # Mostrar progresso
+    print(f"Iteração {i+1:2d}: pos = {posicao:7.4f}, fitness = {fitness:8.4f}")
+
+print("\n" + "=" * 60)
+print(" RESULTADO FINAL")
+print("=" * 60)
+print(f"Posição final: {posicao:.6f}")
+print(f"Fitness final: {fitness:.6f}")
+print(f"Ótimo global: x = 0.000000, f(x) = 0.000000")
+print(f"Erro: {abs(posicao):.6f}")
+
+# Visualizar
+x_plot = np.linspace(-LIMITE, LIMITE, 1000)
+y_plot = funcao(x_plot)
+
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.plot(x_plot, y_plot, 'b-', linewidth=2, label='f(x)')
+plt.scatter(historico_pos, [funcao(p) for p in historico_pos], 
+            color='red', s=50, alpha=0.6, label='Trajetória')
+plt.scatter(posicao, fitness, color='green', s=200, marker='*', label='Final')
+plt.xlabel('x')
+plt.ylabel('f(x)')
+plt.title('Trajetória da Partícula')
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+plt.subplot(1, 2, 2)
+plt.plot(range(ITERACOES+1), historico_fit, 'r-o', linewidth=2, markersize=4)
+plt.xlabel('Iteração')
+plt.ylabel('Fitness')
+plt.title('Convergência')
+plt.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+
+
+MISSÃO 2: O ENXAME (MÚLTIPLAS PARTÍCULAS)
+Objetivo: Trabalhar com um enxame de partículas e entender a cooperação.
+Descrição: Complete as funções de inicialização e atualização do enxame.
+
+"""
+MISSÃO 2: O ENXAME DE PARTÍCULAS
+Cenário: Enxame procurando o mínimo da função de Rosenbrock
+f(x,y) = (1-x)² + 100*(y-x²)²
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+
+# ==================== CONFIGURAÇÕES ====================
+NUM_PARTICULAS = 20
+ITERACOES = 50
+W = 0.7
+C1 = 1.8
+C2 = 1.8
+X_MIN, X_MAX = -2, 2
+Y_MIN, Y_MAX = -1, 3
+
+# ==================== FUNÇÃO OBJETIVO ====================
+def rosenbrock(posicao):
+    x, y = posicao
+    return (1 - x)**2 + 100 * (y - x**2)**2
+
+# ==================== FUNÇÕES A COMPLETAR ====================
+
+# TODO 1: Inicializar uma partícula
+def criar_particula():
+    """
+    Cria uma partícula com posição e velocidade aleatórias.
+    
+    Retorna um dicionário com:
+    - posicao: array [x, y] aleatório dentro dos limites
+    - velocidade: array [vx, vy] aleatório entre -0.5 e 0.5
+    - fitness: fitness na posição atual
+    - pBest_pos: cópia da posição inicial
+    - pBest_fit: fitness inicial
+    """
+    # SEU CÓDIGO AQUI
+    pass
+
+# TODO 2: Atualizar a velocidade de uma partícula
+def atualizar_velocidade(particula, gBest_pos):
+    """
+    Atualiza a velocidade da partícula usando a fórmula do PSO.
+    
+    Parâmetros:
+    - particula: dicionário da partícula
+    - gBest_pos: melhor posição global
+    
+    Retorna: nova velocidade (array)
+    """
+    r1 = np.random.random(2)
+    r2 = np.random.random(2)
+    
+    # Fórmula: v_novo = w*v + c1*r1*(pBest - pos) + c2*r2*(gBest - pos)
+    # SEU CÓDIGO AQUI
+    pass
+
+# TODO 3: Atualizar a posição de uma partícula
+def atualizar_posicao(particula):
+    """
+    Atualiza a posição da partícula baseado na sua velocidade.
+    Garante que a posição fique dentro dos limites.
+    """
+    # SEU CÓDIGO AQUI
+    pass
+
+# ==================== CÓDIGO PRONTO ====================
+
+def executar_pso():
+    # Inicializar enxame
+    enxame = []
+    for _ in range(NUM_PARTICULAS):
+        enxame.append(criar_particula())
+    
+    # Encontrar gBest inicial
+    melhor = min(enxame, key=lambda p: p['fitness'])
+    gBest_pos = melhor['posicao'].copy()
+    gBest_fit = melhor['fitness']
+    
+    historico = {'melhor': [gBest_fit], 'media': [np.mean([p['fitness'] for p in enxame])]}
+    
+    print("=" * 60)
+    print(" PSO - FUNÇÃO DE ROSENBROCK")
+    print("=" * 60)
+    print(f"Início: Melhor fitness = {gBest_fit:.6f}")
+    
+    for iteracao in range(ITERACOES):
+        # Atualizar todas as partículas
+        for p in enxame:
+            # Atualizar velocidade e posição
+            p['velocidade'] = atualizar_velocidade(p, gBest_pos)
+            p['posicao'] = atualizar_posicao(p)
+            
+            # Avaliar nova posição
+            p['fitness'] = rosenbrock(p['posicao'])
+            
+            # Atualizar pBest
+            if p['fitness'] < p['pBest_fit']:
+                p['pBest_fit'] = p['fitness']
+                p['pBest_pos'] = p['posicao'].copy()
+            
+            # Atualizar gBest
+            if p['fitness'] < gBest_fit:
+                gBest_fit = p['fitness']
+                gBest_pos = p['posicao'].copy()
+        
+        historico['melhor'].append(gBest_fit)
+        historico['media'].append(np.mean([p['fitness'] for p in enxame]))
+        
+        if (iteracao + 1) % 10 == 0:
+            print(f"Iteração {iteracao+1:3d}: Melhor = {gBest_fit:.6f}")
+    
+    print(f"\nFim: Melhor fitness = {gBest_fit:.6f}")
+    print(f"Ótimo global: f(1,1) = 0.000000")
+    
+    return gBest_pos, gBest_fit, historico, enxame
+
+# ==================== EXECUTAR ====================
+best_pos, best_fit, historico, enxame = executar_pso()
+
+# Visualizar
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+
+ax1.plot(historico['melhor'], 'b-', linewidth=2, label='Melhor')
+ax1.plot(historico['media'], 'r--', linewidth=2, label='Média')
+ax1.set_xlabel('Iteração')
+ax1.set_ylabel('Fitness')
+ax1.set_title('Convergência do PSO')
+ax1.legend()
+ax1.grid(True, alpha=0.3)
+
+# Mostrar partículas
+x_pos = [p['posicao'][0] for p in enxame]
+y_pos = [p['posicao'][1] for p in enxame]
+
+x_plot = np.linspace(X_MIN, X_MAX, 100)
+y_plot = np.linspace(Y_MIN, Y_MAX, 100)
+X, Y = np.meshgrid(x_plot, y_plot)
+Z = np.array([[rosenbrock([xi, yi]) for xi, yi in zip(row_x, row_y)] 
+              for row_x, row_y in zip(X, Y)])
+
+contour = ax2.contourf(X, Y, Z, levels=50, cmap='viridis', alpha=0.7)
+ax2.scatter(x_pos, y_pos, color='white', s=30, alpha=0.7, label='Partículas')
+ax2.scatter(best_pos[0], best_pos[1], color='red', s=200, 
+           marker='*', label='Melhor')
+ax2.scatter(1, 1, color='yellow', s=100, marker='x', label='Ótimo (1,1)')
+ax2.set_xlabel('x')
+ax2.set_ylabel('y')
+ax2.set_title('Partículas no Espaço de Busca')
+ax2.legend()
+plt.colorbar(contour, ax=ax2)
+
+plt.tight_layout()
+plt.show()
+
+
+
+MISSÃO 3: O PROBLEMA CORPORATIVO (OTIMIZAÇÃO LOGÍSTICA) - 30 minutos
+Objetivo: Aplicar o PSO a um problema real de otimização logística.
+Descrição: Implemente o PSO completo para resolver o problema dos centros de distribuição.
+
+"""
+MISSÃO 3: OTIMIZAÇÃO LOGÍSTICA
+Problema: Encontrar a localização de 5 centros de distribuição
+que minimiza o custo de entrega para 50 clientes.
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+import time
+
+# ==================== CONFIGURAÇÕES ====================
+NUM_CLIENTES = 50
+NUM_CENTROS = 5
+NUM_PARTICULAS = 30
+ITERACOES = 100
+W = 0.7
+C1 = 1.8
+C2 = 1.8
+LIMITE = 10  # Coordenadas de 0 a 10
+
+# ==================== GERAR DADOS ====================
+np.random.seed(42)
+clientes = np.random.rand(NUM_CLIENTES, 2) * LIMITE
+demandas = np.random.randint(1, 100, NUM_CLIENTES)
+
+print("=" * 60)
+print(" OPTIMUS TECH - LOGÍSTICA INTELIGENTE")
+print("=" * 60)
+print(f"\n DADOS DO PROBLEMA:")
+print(f"   - {NUM_CLIENTES} clientes")
+print(f"   - {NUM_CENTROS} centros de distribuição")
+print(f"   - Demanda média: {np.mean(demandas):.1f} unidades")
+
+# ==================== FUNÇÃO OBJETIVO ====================
+def fitness(posicoes_centros):
+    """
+    Calcula o custo total de entrega.
+    
+    posicoes_centros: array de 10 elementos [x1,y1,x2,y2,...,x5,y5]
+    Retorna: -custo_total (maximização)
+    """
+    # TODO 1: Converter para lista de centros
+    centros = []
+    # SEU CÓDIGO AQUI
+    
+    custo_total = 0
+    
+    # Para cada cliente
+    for cliente, demanda in zip(clientes, demandas):
+        # TODO 2: Encontrar o centro mais próximo
+        # SEU CÓDIGO AQUI
+        
+        # TODO 3: Calcular distância ao centro mais próximo
+        # SEU CÓDIGO AQUI
+        
+        # TODO 4: Adicionar ao custo total
+        # SEU CÓDIGO AQUI
+    
+    # Retornar negativo (maximização)
+    return -custo_total
+
+# ==================== PSO COMPLETO ====================
+
+# TODO 5: Criar uma partícula (10 dimensões)
+def criar_particula():
+    # SEU CÓDIGO AQUI
+    pass
+
+# TODO 6: Atualizar velocidade (10 dimensões)
+def atualizar_velocidade(particula, gBest_pos):
+    # SEU CÓDIGO AQUI
+    pass
+
+# TODO 7: Atualizar posição (10 dimensões) com limites
+def atualizar_posicao(particula):
+    # SEU CÓDIGO AQUI
+    pass
+
+# ==================== EXECUTAR ====================
+def executar_pso():
+    # Inicializar
+    enxame = []
+    for _ in range(NUM_PARTICULAS):
+        enxame.append(criar_particula())
+    
+    # Encontrar gBest
+    melhor = min(enxame, key=lambda p: p['fitness'])
+    gBest_pos = melhor['posicao'].copy()
+    gBest_fit = melhor['fitness']
+    
+    historico = [gBest_fit]
+    
+    print("\n OTIMIZANDO...")
+    start_time = time.time()
+    
+    for iteracao in range(ITERACOES):
+        for p in enxame:
+            p['velocidade'] = atualizar_velocidade(p, gBest_pos)
+            p['posicao'] = atualizar_posicao(p)
+            p['fitness'] = fitness(p['posicao'])
+            
+            if p['fitness'] < p['pBest_fit']:
+                p['pBest_fit'] = p['fitness']
+                p['pBest_pos'] = p['posicao'].copy()
+            
+            if p['fitness'] < gBest_fit:
+                gBest_fit = p['fitness']
+                gBest_pos = p['posicao'].copy()
+        
+        historico.append(gBest_fit)
+        
+        if (iteracao + 1) % 20 == 0:
+            print(f"  Iteração {iteracao+1:3d}: Custo = {-gBest_fit:.2f}")
+    
+    execution_time = time.time() - start_time
+    
+    return gBest_pos, gBest_fit, historico, execution_time
+
+# ==================== RESULTADOS ====================
+best_pos, best_fit, historico, exec_time = executar_pso()
+
+# Converter melhor posição para centros
+centros = []
+for i in range(NUM_CENTROS):
+    centros.append([best_pos[2*i], best_pos[2*i+1]])
+
+# Converter melhor posição para centros
+centros = []
+for i in range(NUM_CENTROS):
+    centros.append([best_pos[2*i], best_pos[2*i+1]])
+
+print(f"\n RESULTADO FINAL:")
+print(f"   Tempo de execução: {exec_time:.2f} segundos")
+print(f"   Custo total: {abs(best_fit):.2f}")
+print(f"   Melhor custo possível: 0.00")
+print(f"   Centros de distribuição:")
+for i, centro in enumerate(centros):
+    print(f"      Centro {i+1}: ({centro[0]:.2f}, {centro[1]:.2f})")
+
+# ==================== VISUALIZAÇÃO ====================
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+
+# Mapa de clientes e centros
+ax1.scatter(clientes[:, 0], clientes[:, 1], c='blue', s=30, alpha=0.6, label='Clientes')
+for i, centro in enumerate(centros):
+    ax1.scatter(centro[0], centro[1], c='red', s=200, marker='s', 
+               label=f'Centro {i+1}' if i == 0 else "")
+    ax1.annotate(f'C{i+1}', (centro[0], centro[1]), fontsize=10, 
+                ha='center', va='bottom', weight='bold')
+
+ax1.set_xlabel('Coordenada X')
+ax1.set_ylabel('Coordenada Y')
+ax1.set_title('Clientes e Centros de Distribuição')
+ax1.legend()
+ax1.grid(True, alpha=0.3)
+
+# Convergência
+ax2.plot(historico, 'b-', linewidth=2)
+ax2.set_xlabel('Iteração')
+ax2.set_ylabel('Custo Total')
+ax2.set_title('Convergência da Otimização')
+ax2.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+
+
+
+
+MISSÃO 4: OTIMIZAÇÃO DE PARÂMETROS - 25 minutos
+Objetivo: Entender como os parâmetros do PSO afetam o desempenho.
+Descrição: Execute o PSO com diferentes configurações de parâmetros e analise os resultados.
+
+"""
+MISSÃO 4: OTIMIZAÇÃO DOS PARÂMETROS DO PSO
+Objetivo: Encontrar a melhor combinação de parâmetros para o problema logístico
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+import random
+import time
+
+# ==================== CONFIGURAÇÕES ====================
+# Parâmetros base
+BASE_PARAMS = {
+    'num_particulas': 30,
+    'iteracoes': 50,
+    'w': 0.7,
+    'c1': 1.8,
+    'c2': 1.8,
+    'limite': 10,
+    'num_centros': 5,
+    'num_clientes': 50
+}
+
+# Experimentos a serem realizados
+EXPERIMENTOS = [
+    {'nome': 'Padrão', 'params': BASE_PARAMS.copy()},
+    {'nome': 'Inércia Alta', 'params': {**BASE_PARAMS, 'w': 0.9}},
+    {'nome': 'Inércia Baixa', 'params': {**BASE_PARAMS, 'w': 0.5}},
+    {'nome': 'Cognitivo Alto', 'params': {**BASE_PARAMS, 'c1': 2.5}},
+    {'nome': 'Social Alto', 'params': {**BASE_PARAMS, 'c2': 2.5}},
+    {'nome': 'Mais Partículas', 'params': {**BASE_PARAMS, 'num_particulas': 60}},
+]
+
+# ==================== GERAR DADOS ====================
+np.random.seed(42)
+clientes = np.random.rand(BASE_PARAMS['num_clientes'], 2) * BASE_PARAMS['limite']
+demandas = np.random.randint(1, 100, BASE_PARAMS['num_clientes'])
+
+# ==================== FUNÇÃO FITNESS ====================
+def fitness(posicoes_centros, clientes, demandas, num_centros):
+    centros = [posicoes_centros[2*i:2*i+2] for i in range(num_centros)]
+    custo_total = 0
+    
+    for cliente, demanda in zip(clientes, demandas):
+        distancias = [np.sqrt((c[0] - cliente[0])**2 + (c[1] - cliente[1])**2) 
+                      for c in centros]
+        custo_total += min(distancias) * demanda
+    
+    return -custo_total
+
+# ==================== PSO ====================
+def executar_pso(params, clientes, demandas):
+    num_particulas = params['num_particulas']
+    iteracoes = params['iteracoes']
+    w = params['w']
+    c1 = params['c1']
+    c2 = params['c2']
+    limite = params['limite']
+    num_centros = params['num_centros']
+    dim = num_centros * 2
+    
+    # Inicializar
+    enxame = []
+    for _ in range(num_particulas):
+        posicao = np.random.uniform(0, limite, dim)
+        velocidade = np.random.uniform(-0.5, 0.5, dim)
+        fit = fitness(posicao, clientes, demandas, num_centros)
+        enxame.append({
+            'posicao': posicao,
+            'velocidade': velocidade,
+            'fitness': fit,
+            'pBest_pos': posicao.copy(),
+            'pBest_fit': fit
+        })
+    
+    # gBest
+    melhor = min(enxame, key=lambda p: p['fitness'])
+    gBest_pos = melhor['posicao'].copy()
+    gBest_fit = melhor['fitness']
+    
+    historico = [gBest_fit]
+    
+    for _ in range(iteracoes):
+        for p in enxame:
+            r1 = np.random.random(dim)
+            r2 = np.random.random(dim)
+            
+            p['velocidade'] = w * p['velocidade'] + \
+                             c1 * r1 * (p['pBest_pos'] - p['posicao']) + \
+                             c2 * r2 * (gBest_pos - p['posicao'])
+            
+            p['posicao'] = np.clip(p['posicao'] + p['velocidade'], 0, limite)
+            p['fitness'] = fitness(p['posicao'], clientes, demandas, num_centros)
+            
+            if p['fitness'] < p['pBest_fit']:
+                p['pBest_fit'] = p['fitness']
+                p['pBest_pos'] = p['posicao'].copy()
+            
+            if p['fitness'] < gBest_fit:
+                gBest_fit = p['fitness']
+                gBest_pos = p['posicao'].copy()
+        
+        historico.append(gBest_fit)
+    
+    return gBest_fit, historico
+
+# ==================== EXECUTAR EXPERIMENTOS ====================
+print("=" * 60)
+print(" EXPERIMENTOS COM PARÂMETROS DO PSO")
+print("=" * 60)
+
+resultados = {}
+
+for exp in EXPERIMENTOS:
+    print(f"\n Experimento: {exp['nome']}")
+    print(f"   Parâmetros: w={exp['params']['w']}, c1={exp['params']['c1']}, "
+          f"c2={exp['params']['c2']}, partículas={exp['params']['num_particulas']}")
+    
+    # Executar múltiplas vezes para ter média
+    execucoes = 5
+    custos = []
+    historicos = []
+    
+    for i in range(execucoes):
+        custo_final, historico = executar_pso(exp['params'], clientes, demandas)
+        custos.append(custo_final)
+        historicos.append(historico)
+    
+    resultados[exp['nome']] = {
+        'custo_medio': -np.mean(custos),
+        'custo_std': np.std(custos),
+        'melhor_custo': -min(custos),
+        'pior_custo': -max(custos),
+        'historico': np.mean(historicos, axis=0)
+    }
+    
+    print(f"   Custo médio: {resultados[exp['nome']]['custo_medio']:.2f} ± "
+          f"{resultados[exp['nome']]['custo_std']:.2f}")
+
+# ==================== ANÁLISE DOS RESULTADOS ====================
+print("\n" + "=" * 60)
+print(" ANÁLISE DOS RESULTADOS")
+print("=" * 60)
+
+print("\n| Experimento        | Custo Médio | Melhor Custo | Pior Custo  |")
+print("|--------------------|-------------|--------------|-------------|")
+for nome, data in resultados.items():
+    print(f"| {nome:<18} | {data['custo_medio']:10.2f} | {data['melhor_custo']:12.2f} | "
+          f"{data['pior_custo']:11.2f} |")
+
+# ==================== VISUALIZAÇÃO ====================
+plt.figure(figsize=(14, 8))
+
+for nome, data in resultados.items():
+    plt.plot(data['historico'], linewidth=2, label=nome)
+
+plt.xlabel('Iteração')
+plt.ylabel('Custo Total')
+plt.title('Comparação de Desempenho dos Parâmetros do PSO')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+# ==================== RELATÓRIO ====================
+# RESPONDAM AS QUESTÕES ABAIXO:
+
+print("\n" + "=" * 60)
+print(" ANÁLISE E CONCLUSÕES")
+print("=" * 60)
+print("\n1. Qual configuração obteve o MELHOR resultado?")
+print("   →", min(resultados.items(), key=lambda x: x[1]['custo_medio'])[0])
+
+print("\n2. Qual configuração obteve o PIOR resultado?")
+print("   →", max(resultados.items(), key=lambda x: x[1]['custo_medio'])[0])
+
+print("\n3. O que você observou sobre o efeito de:")
+print("   - Inércia (w):")
+print("   - Cognitivo (c1):")
+print("   - Social (c2):")
+print("   - Número de partículas:")
+
+print("\n4. Qual configuração você recomenda para este problema? Por quê?")
+
+
+
+RELATÓRIO FINAL PSO
+Instruções: Após completar as 4 missões, preencha este relatório com suas observações, dificuldades e impressões.
+
+PARTE 1: O QUE VOCÊ APRENDEU?
+
+1. Explique com suas palavras o que é o PSO e como ele funciona.
+
+2. Qual a diferença entre pBest e gBest? Por que ambos são importantes?
+
+
+PARTE 2: SUA EXPERIÊNCIA COM AS MISSÕES
+
+Missão 1 - A Partícula Solitária:
+A partícula encontrou o mínimo? ( ) Sim ( ) Não
+
+Quantas iterações foram necessárias? _____
+
+Dificuldade: ( ) Fácil ( ) Médio ( ) Difícil
+
+Missão 2 - O Enxame:
+O enxame encontrou o mínimo global? ( ) Sim ( ) Não
+
+Compare com a Missão 1: O enxame foi mais rápido? ( ) Sim ( ) Não
+
+Dificuldade: ( ) Fácil ( ) Médio ( ) Difícil
+
+
+Missão 3 - Problema Corporativo:
+
+Compare com o custo inicial: Melhorou? ( ) Sim ( ) Não
+
+Quantos centros foram alocados? _____
+
+Dificuldade: ( ) Fácil ( ) Médio ( ) Difícil
+
+
+Missão 4 - Otimização de Parâmetros:
+
+Melhor configuração encontrada: w=___ , c1=___ , c2=, partículas=
+
+Pior configuração encontrada: w=___ , c1=___ , c2=, partículas=
+
+Dificuldade: ( ) Fácil ( ) Médio ( ) Difícil
+
