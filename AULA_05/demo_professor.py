@@ -10,7 +10,7 @@ N_ITERACOES = 100
 
 # O segredo do PSO está no equilíbrio destas três forças:
 W = 0.5   # Inércia: Peso da velocidade atual (tendência de manter o curso)
-C1 = 1.5  # Fator Cognitivo (Teimosia): Peso da melhor memória PESSOAL do pássaro
+C1 = 1.5  # Fator Cognitivo (Teimosia): Peso da melhor memória PESSOAL da partícula (neste caso o passário)
 C2 = 1.5  # Fator Social (Efeito Manada): Peso da melhor memória do BANDO
 
 # ==========================================
