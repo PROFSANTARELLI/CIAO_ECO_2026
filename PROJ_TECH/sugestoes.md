@@ -1,6 +1,7 @@
 PROJETOS TECH INTEGRADO
 
 Sugestão 1: SISTEMA DE SEGURANÇA PREDITIVA PARA REDES TELECOM
+
 Descrição: Desenvolver um sistema que monitora o tráfego de rede em tempo real, identifica padrões anômalos (possíveis ataques) e otimiza a alocação de recursos de segurança usando algoritmos evolutivos.
 
 Disciplinas envolvidas:
@@ -18,6 +19,7 @@ Resultado esperado:
 
 
 Sugestão 2: SISTEMA DE ROTEAMENTO ADAPTATIVO PARA REDES 5G
+
 Descrição: Criar um sistema de roteamento inteligente para redes 5G que otimiza dinamicamente as rotas baseado em tráfego, latência e segurança, usando metaheurísticas e distribuído em microsserviços.
 
 Disciplinas envolvidas:
@@ -34,6 +36,7 @@ Resultado esperado:
 
 
 Sugestão 3: FIREWALL EVOLUTIVO COM APRENDIZADO DE PADRÕES DE ATAQUE
+
 Descrição: Construir um firewall inteligente que aprende padrões de ataque usando árvores de decisão evolutivas, otimiza regras usando Algoritmos Genéticos e é implementado com arquitetura de microsserviços.
 
 Disciplinas envolvidas:
@@ -51,6 +54,7 @@ Resultado esperado:
 
 
 Sugestão 4: BOT DE SEGURANÇA PARA CÓDIGO ABERTO COM OTIMIZAÇÃO DE CUSTO
+
 Descrição: Criar um bot automatizado para projetos open source que analisa vulnerabilidades de segurança, sugere correções e otimiza o tempo de resposta usando metaheurísticas.
 
 Disciplinas envolvidas:
