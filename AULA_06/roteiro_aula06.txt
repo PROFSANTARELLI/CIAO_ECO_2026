@@ -1,0 +1,6 @@
+AC-2 PARTE 2 - VALOR: 0,25 
+
+1 - Gere o diretório AULA_06 e crie o arquivo resultados_aula06_ciao.md
+2 - Coloque no arquivo resultados_aula06_ciao.md somente as respostas e outputs das atividades
+3 - Construa e execute os códigos dos arquivos: lab01_aula06_ciao, lab02_aula06_ciao, lab03_aula06_ciao e lab04_aula06_ciao
+4 - Após rodar, salve cada um deles como .ipynb ou .py
