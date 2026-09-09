@@ -1,0 +1,80 @@
+LABORATÓRIO 04 — ACO DO ZERO
+
+Missão: Construir, do zero, um algoritmo capaz de encontrar uma boa rota entre dois nós de uma rede utilizando o conceito de ACO.
+
+O problema será:
+
+Rede:
+6 nós
+
+Origem:
+0
+
+Destino:
+5
+
+A matriz de custos será fornecida:
+
+CUSTOS = np.array([
+    [0, 2, 4, np.inf, np.inf, np.inf],
+    [2, 0, 1, 5, np.inf, np.inf],
+    [4, 1, 0, 2, 3, np.inf],
+    [np.inf, 5, 2, 0, 1, 4],
+    [np.inf, np.inf, 3, 1, 0, 2],
+    [np.inf, np.inf, np.inf, 4, 2, 0]
+])
+
+Requisitos do sistema - O programa deve:
+
+1 - Representar a rede utilizando uma matriz de custos.
+2 - Criar uma matriz de feromônio.
+3 - Criar várias formigas.
+4 - Fazer cada formiga construir uma rota.
+5 - Impedir que uma formiga visite novamente um nó.
+6 - Calcular o custo de cada rota.
+7 - Reforçar as melhores rotas com feromônio.
+8 - Aplicar evaporação.
+9 - Repetir o processo por várias iterações.
+10 - Informar a melhor rota encontrada.
+11 - Informar o custo da melhor rota.
+12 - Exibir um gráfico mostrando a evolução do melhor custo.
+
+Parâmetros mínimos
+NUM_FORMIGAS = 20
+NUM_ITERACOES = 50
+
+ALPHA = 1.0
+BETA = 2.0
+
+TAXA_EVAPORACAO = 0.5
+Q = 100
+
+Resultado esperado: Ao final, o programa deverá apresentar algo semelhante a:
+
+========== RESULTADO ==========
+
+Melhor rota encontrada:
+[0, ..., 5]
+
+Melhor custo:
+...
+
+O resultado pode variar porque o ACO utiliza escolhas probabilísticas.
+
+Depois de construir o algoritmo, altere:
+
+NUM_FORMIGAS
+NUM_ITERACOES
+ALPHA
+BETA
+TAXA_EVAPORACAO
+
+e observe como o comportamento do algoritmo muda.
+
+Questões finais:
+1 - Explique, com suas palavras, como o feromônio ajuda o ACO a aprender quais caminhos são melhores.
+
+2 - Qual é a diferença entre explorar novos caminhos e aproveitar caminhos que já demonstraram ser bons?
+
+3 - Se você precisasse melhorar o desempenho desse ACO para uma rede muito maior, qual parâmetro ou parte do algoritmo você investigaria primeiro? Justifique.
+
