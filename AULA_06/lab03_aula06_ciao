@@ -1,0 +1,194 @@
+LABORATÓRIO 03 — COMPLETANDO O ACO
+
+Objetivo: implementar partes importantes do ACO a partir do código estudado no Laboratório 01.
+
+1. Representação da rede
+import numpy as np
+import random
+import matplotlib.pyplot as plt
+
+CUSTOS = np.array([
+    [0, 2, 4, np.inf, np.inf, np.inf],
+    [2, 0, 1, 5, np.inf, np.inf],
+    [4, 1, 0, 2, 3, np.inf],
+    [np.inf, 5, 2, 0, 1, 4],
+    [np.inf, np.inf, 3, 1, 0, 2],
+    [np.inf, np.inf, np.inf, 4, 2, 0]
+])
+
+ORIGEM = 0
+DESTINO = 5
+
+NUM_FORMIGAS = 20
+NUM_ITERACOES = 50
+
+ALPHA = 1.0
+BETA = 2.0
+
+TAXA_EVAPORACAO = 0.5
+Q = 100
+
+feromonio = np.ones_like(CUSTOS, dtype=float)
+feromonio[CUSTOS == np.inf] = 0
+2. Função de vizinhos
+
+Esta parte já está pronta.
+
+def obter_vizinhos(no):
+
+    vizinhos = []
+
+    for proximo in range(len(CUSTOS)):
+
+        if proximo != no and CUSTOS[no][proximo] != np.inf:
+            vizinhos.append(proximo)
+
+    return vizinhos
+3. Desafio 1 — Calcular a atratividade
+
+Complete a função:
+
+def calcular_atratividade(no_atual, proximo):
+
+    fer = feromonio[no_atual][proximo]
+    custo = CUSTOS[no_atual][proximo]
+
+    # TODO:
+    # Calcule a atratividade utilizando
+    # o feromônio, ALPHA, o custo e BETA.
+
+    atratividade = ______________________
+
+    return atratividade
+
+A fórmula utilizada no Laboratório 01 é:
+
+atratividade =
+feromônio^ALPHA × (1/custo)^BETA
+4. Desafio 2 — Evaporação
+
+Complete:
+
+def evaporar_feromonio():
+
+    global feromonio
+
+    # TODO:
+    # Reduza o feromônio de acordo com
+    # a taxa de evaporação.
+
+    ______________________________
+
+    feromonio[CUSTOS == np.inf] = 0
+5. Desafio 3 — Depósito
+
+Complete:
+
+def depositar_feromonio(rota, custo):
+
+    # Quanto menor o custo,
+    # maior deve ser o depósito.
+
+    deposito = __________________
+
+    for i in range(len(rota) - 1):
+
+        origem = rota[i]
+        destino = rota[i + 1]
+
+        # TODO:
+        # Adicione o depósito de feromônio
+        # ao caminho utilizado.
+
+        ______________________________
+6. Desafio 4 — Construir uma rota
+
+Agora complete a função:
+
+def construir_rota():
+
+    rota = [ORIGEM]
+    atual = ORIGEM
+
+    while atual != DESTINO:
+
+        # Descubra os vizinhos disponíveis.
+        vizinhos = obter_vizinhos(atual)
+
+        candidatos = [
+            no for no in vizinhos
+            if no not in rota
+        ]
+
+        if not candidatos:
+            return None
+
+        # Escolha um dos candidatos.
+        # A escolha deve considerar a atratividade.
+
+        # TODO
+        # Calcule as atratividades.
+
+        ______________________________
+
+        # TODO
+        # Transforme as atratividades em probabilidades.
+
+        ______________________________
+
+        # TODO
+        # Escolha o próximo nó.
+
+        ______________________________
+
+        rota.append(proximo)
+        atual = proximo
+
+    return rota
+7. Execução
+
+Depois de completar as funções, utilize:
+
+melhor_rota = None
+melhor_custo = float("inf")
+
+for iteracao in range(NUM_ITERACOES):
+
+    rotas = []
+
+    for _ in range(NUM_FORMIGAS):
+
+        rota = construir_rota()
+
+        if rota is not None:
+
+            custo = calcular_custo(rota)
+
+            rotas.append((rota, custo))
+
+            if custo < melhor_custo:
+
+                melhor_custo = custo
+                melhor_rota = rota.copy()
+
+    evaporar_feromonio()
+
+    for rota, custo in rotas:
+
+        depositar_feromonio(
+            rota,
+            custo
+        )
+
+print("Melhor rota:", melhor_rota)
+print("Melhor custo:", melhor_custo)
+
+
+Questões para serem respondidas:
+
+1 - Por que a fórmula da atratividade utiliza 1 / custo em vez de utilizar diretamente o custo?
+
+2 - O que acontece com a atratividade quando uma rota recebe mais feromônio?
+
+3 - Por que a função construir_rota() precisa impedir que a formiga visite novamente um nó que já está na rota?
+
