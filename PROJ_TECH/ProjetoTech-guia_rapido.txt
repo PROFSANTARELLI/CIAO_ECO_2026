@@ -2,26 +2,26 @@
                     PROJETO TECH INTEGRADO — GUIA RÁPIDO & CRONOGRAMA
 ================================================================================
 
-Período: 21/09/2026 a 21/11/2026  
+Período: 16/09/2026 a 21/11/2026  
 Canal de Envio: E-mail para flavio.santarelli@pro.fecaf.com.br  
 Assunto Padrão: [PROJETO TECH] - Nome do Grupo / Turma  
 Prazo Limite de Formalização: 20/09/2026 às 23:59  
 
 
-================================================================================
-1. CRONOGRAMA GERAL & MARCOS GLOBAIS
-================================================================================
----------------------------------------------------------------------------------------------------------
+===========================================================================================
+1. CRONOGRAMA GERAL e MARCOS GLOBAIS - Computational Intelligence & Algorithm Optimization
+===========================================================================================
+-----------------------------------------------------------------------------------------------------------------
 SEMANA | PERÍODO         | FOCO PRINCIPAL                                | MARCO OBRIGATÓRIO
----------------------------------------------------------------------------------------------------------
-Sem 1  | 16/09 - 21/09   | Formação de grupos, escolha da trilha e repo. | Registro do Grupo (20/09)
+-----------------------------------------------------------------------------------------------------------------
+Sem 1  | 16/09 - 21/09   | Escolha da trilha e repositório.              | Registro do Grupo
 Sem 2  | 22/09 - 04/10   | Modelagem (variáveis, função objetivo, lim).  | Rascunho de modelagem/protótipo
 Sem 3  | 05/10 - 11/10   | Esqueleto arquitetural e interface da IA.     | Arquitetura definida com padrões
-Sem 4  | 12/10 - 25/10   | Metaheurística v0 rodando end-to-end.          | Otimizador funcional + preliminares
-Sem 5  | 26/10 - 01/11   | Defesa presencial e validação do MVP 1.       | PORTÃO MVP 1 (Aprovação de rumo)
-Sem 6  | 02/11 - 16/11   | Refinamento, testes intensivos e doc.         | Testes com múltiplas execuções
-Sem 7  | 17/11 - 21/11   | Release público no GitHub, relatório e vídeo.  | ENTREGA FINAL & DEFESA (21/11)
----------------------------------------------------------------------------------------------------------
+Sem 4  | 12/10 - 25/10   | Metaheurística v0 rodando end-to-end.         | Otimizador funcional + preliminares
+Sem 5  | 26/10 - 01/11   | Evidência presencial e validação do MVP 1.    | MVP 1 (Entrega e avaliação)
+Sem 6  | 02/11 - 16/11   | Refinamento, testes e documentação.           | Docs e evidências de testes
+Sem 7  | 17/11 - 21/11   | Release FINAL no GitHub, relatório e vídeo.   | ENTREGA FINAL (21/11)
+-----------------------------------------------------------------------------------------------------------------
 
 
 ================================================================================
