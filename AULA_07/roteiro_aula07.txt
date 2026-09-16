@@ -4,7 +4,7 @@ LABORATÓRIO PRÁTICO DE META-HEURÍSTICAS
 
 Instruções Gerais:
 - Criar o diretório AULA_07 dentro do respositório da dupla/trio e dentro dele criar o arquivo resultados_aula07.md
-- O LAB 01 vem pronto e serve como uma referência para os demais.
+- O LAB 01 vem pronto e serve como uma referência para os demais. Execute, pegue o output e responda às questões técnicas
 - Os LABS 02 a 05 contêm lacunas marcadas estrategicamente com #TODO: ....  Seu objetivo é preencher o código correto e responder às perguntas analíticas ao final de cada exercício.
 - Requisito de ambiente: bibliotecas numpy e matplotlib (pip install numpy matplotlib).
 
