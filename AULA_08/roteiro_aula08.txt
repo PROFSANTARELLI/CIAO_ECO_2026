@@ -6,4 +6,74 @@ TÓPICOS DA AULA 08
 
 3 - Fechamento da AC-2 - etapa 2 da fase final
 
+================================================================================
+FECHAMENTO DA AC-2
+Otimização de Sistemas Computacionais e Resiliência de Redes
+================================================================================
 
+INSTRUÇÕES GERAIS:
+--------------------------------------------------------------------------------
+1 - Crie o diretório AULA_08 no seu repositório Git e gere o arquivo resultados_aula08.md
+2 - Registre no arquivo resultados_aula08.md as análises técnicas, gráficos/tabelas e outputs dos cenários solicitados.
+3 - Construa e execute integralmente os códigos em Python do zero para os arquivos:
+    - lab01_aula08.py (ou .ipynb)
+    - lab02_aula08.py (ou .ipynb)
+    - lab03_aula08.py (ou .ipynb)
+4 - Salve e faça o git commit / git push de todos os artefatos (.py/.ipynb e .md) ao final da aula.
+
+================================================================================
+DESCRIÇÃO DETALHADA DOS LABS
+================================================================================
+
+--------------------------------------------------------------------------------
+LAB 01 — PSO para Balanceamento Dinâmico de Carga em Datacenters
+--------------------------------------------------------------------------------
+Cenário:
+Redirecionamento dinâmico de tráfego web entre 6 zonas de disponibilidade (AZs).
+O sistema deve encontrar o vetor de pesos contínuos W = [w1, w2, w3, w4, w5, w6] (com sum(wi) = 1.0) para minimizar a temperatura média ponderada dos racks, 
+sabendo que cada AZ possui um coeficiente de aquecimento específico C = [42.0, 35.0, 58.0, 30.0, 50.0, 65.0] °C.
+
+Requisitos do Código:
+- Implementar do zero a classe/estrutura do PSO Contínuo (com atualização de velocidade, posição e histórico de P_best e G_best).
+- Aplicar um operador de normalização no vetor de posições das partículas a cada iteração, garantindo obrigatoriamente sum(wi) = 1.0.
+- Implementar função de penalidade externa caso a temperatura de alguma AZ ultrapasse o limite crítico de 75 °C.
+
+Artefatos e Testes
+- Executar e comparar a evolução do fitness para 3 tamanhos de população de partículas: 10, 30 e 50 partículas.
+- Registrar a tabela com a melhor distribuição W encontrada para cada população e a validação da soma (sum(wi) = 1.0).
+
+
+--------------------------------------------------------------------------------
+LAB 02 — AG Binário com Reparação/Penalidade para Seleção de Microsserviços em Edge
+--------------------------------------------------------------------------------
+Cenário:
+Um nó de Edge Computing precisa selecionar um subconjunto de 15 microsserviços disponíveis para manter em memória.
+Cada serviço possui um Valor de Negócio, um Consumo de RAM (GB) e um Consumo de CPU (Cores).
+O objetivo é maximizar o Valor de Negócio acumulado respeitando as restrições simultâneas de capacidade: máximo de 16 GB de RAM e máximo de 8 cores de CPU.
+
+Requisitos do Código:
+- Implementar do zero um Algoritmo Genético Binário (1 = serviço carregado, 0 = não carregado).
+- Criar e comparar duas estratégias de avaliação de fitness:
+  1. Estratégia A (Penalidade Rígida): Indivíduos que violarem qualquer limite (RAM ou CPU) recebem fitness = 0.
+  2. Estratégia B (Penalidade Proporcional): O fitness é reduzido proporcionalmente à quantidade de RAM/CPU excedida.
+- Operadores de Seleção por Torneio, Crossover de Ponto Único e Mutação Binária.
+
+Artefatos e Testes:
+- Comparar a média e o desvio-padrão do fitness ao longo das gerações entre a Estratégia A e a Estratégia B.
+- Demonstrar no relatório qual das duas estratégias preservou melhor a diversidade genética da população e qual encontrou a melhor combinação final de microsserviços.
+
+
+--------------------------------------------------------------------------------
+LAB 03 — ACO para Projeto de Topologia de Rede de Baixa Latência
+--------------------------------------------------------------------------------
+Cenário:
+Conectar 10 switches de rede em uma topologia em árvore geradora que minimize a latência total acumulada entre os pares mais críticos, respeitando a matriz de latências físicas de cabeamento D (10x10).
+
+Requisitos do Código:
+- Implementar do zero o algoritmo de Colônia de Formigas (ACO) adaptado para seleção de arestas em grafos.
+- Incluir verificação de ciclos/conectividade ao longo da construção da rota das formigas para garantir que a solução final forme um grafo/árvore válido.
+- Atualização da matriz de feromônio tau_ij com taxa de evaporação rho = 0.2 aplicada apenas às melhores topologias da iteração.
+
+Artefatos e Testes:
+- Imprimir a Matriz de Adjacência final (10x10) do grafo de rede otimizado pelo ACO.
+- Apresentar o ganho percentual de redução de latência obtido pelo ACO em relação a uma topologia gerada de forma aleatória.
