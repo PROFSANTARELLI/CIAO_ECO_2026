@@ -67,7 +67,8 @@ Artefatos e Testes:
 LAB 03 — ACO para Projeto de Topologia de Rede de Baixa Latência
 --------------------------------------------------------------------------------
 Cenário:
-Conectar 10 switches de rede em uma topologia em árvore geradora que minimize a latência total acumulada entre os pares mais críticos, respeitando a matriz de latências físicas de cabeamento D (10x10).
+Conectar 10 switches de rede em uma topologia em árvore geradora que minimize a latência total acumulada entre os pares mais críticos,
+respeitando a matriz de latências físicas de cabeamento D (10x10).
 
 Requisitos do Código:
 - Implementar do zero o algoritmo de Colônia de Formigas (ACO) adaptado para seleção de arestas em grafos.
