@@ -3,81 +3,47 @@
 # Objetivo: Construir as Variáveis Linguísticas e Funções de Pertinência
 # ==============================================================================
 
-from pathlib import Path
-import matplotlib.pyplot as plt
+# Ventilador fuzzy com scikit-fuzzy
+ 
 import numpy as np
-import skfuzzy as fuzzy
+import skfuzzy as fuzz
 from skfuzzy import control as ctrl
-
-def criar_sistema_fuzzy():
-    """
-    Define o Universo do Discurso, as Variáveis Linguísticas
-    e mapear as Funções de Pertinência (Membership Functions) do problema.
-    """
-    # --------------------------------------------------------------------------
-    # ETAPA 1: DEFINIÇÃO DOS UNIVERSOS DO DISCURSO (UNIVERSES OF DISCOURSE)
-    # --------------------------------------------------------------------------
-    # Antecedente 1: Impacto no Negócio (0 a 100%)
-    impacto = ctrl.Antecedent(np.arange(0, 101, 1), 'impacto')
-    
-    # Antecedente 2: Explorabilidade da Falha (0 a 10)
-    explorabilidade = ctrl.Antecedent(np.arange(0, 11, 1), 'explorabilidade')
-    
-    # Consequente: Urgência de Resposta/Atendimento (0 a 100%)
-    urgencia = ctrl.Consequent(np.arange(0, 101, 1), 'urgencia')
-
-    # --------------------------------------------------------------------------
-    # ETAPA 2: CONFIGURAÇÃO DO MÉTODO DE DEFUZZIFICAÇÃO
-    # --------------------------------------------------------------------------
-    urgencia.defuzzify_method = 'centroid'
-
-    # --------------------------------------------------------------------------
-    # ETAPA 3: FUNÇÕES DE PERTINÊNCIA DA VARIÁVEL "IMPACTO" (0 a 100)
-    # trimf = Triangular [início, topo_máximo, fim]
-    # trapmf = Trapezoidal [início_rampa, topo_inicio, topo_fim, fim_rampa]
-    # --------------------------------------------------------------------------
-    impacto['baixo'] = fuzzy.trimf(impacto.universe, [0, 0, 40])
-    impacto['medio'] = fuzzy.trimf(impacto.universe, [20, 50, 80])
-    impacto['alto'] = fuzzy.trapmf(impacto.universe, [60, 80, 100, 100])
-
-    # --------------------------------------------------------------------------
-    # ETAPA 4: FUNÇÕES DE PERTINÊNCIA DA VARIÁVEL "EXPLORABILIDADE" (0 a 10)
-    # --------------------------------------------------------------------------
-    explorabilidade['baixa'] = fuzzy.trimf(explorabilidade.universe, [0, 0, 4])
-    explorabilidade['moderada'] = fuzzy.trimf(explorabilidade.universe, [2, 5, 8])
-    explorabilidade['alta'] = fuzzy.trimf(explorabilidade.universe, [6, 10, 10])
-
-    # --------------------------------------------------------------------------
-    # ETAPA 5: FUNÇÕES DE PERTINÊNCIA DA VARIÁVEL "URGÊNCIA" (0 a 100)
-    # --------------------------------------------------------------------------
-    urgencia['baixa'] = fuzzy.trimf(urgencia.universe, [0, 0, 30])
-    urgencia['media'] = fuzzy.trimf(urgencia.universe, [20, 50, 70])
-    urgencia['alta'] = fuzzy.trimf(urgencia.universe, [60, 80, 90])
-    urgencia['critica'] = fuzzy.trapmf(urgencia.universe, [80, 90, 100, 100])
-
-    return impacto, explorabilidade, urgencia
-
-
-def gerar_graficos_pertinencia():
-    """
-    Visualiza graficamente os conjuntos fuzzy e salva a imagem de validação.
-    """
-    impacto, explorabilidade, urgencia = criar_sistema_fuzzy()
-    
-    Path("results").mkdir(exist_ok=True)
-    
-    fig, (ax0, ax1, ax2) = plt.subplots(nrows=3, figsize=(8, 8))
-    impacto.view(ax=ax0)
-    explorabilidade.view(ax=ax1)
-    urgencia.view(ax=ax2)
-    
-    plt.tight_layout()
-    plt.savefig('results/membership_functions.png')
-    plt.close()
-    print("Sucesso: Gráfico 'results/membership_functions.png' gerado com êxito!")
-
-
-if __name__ == "__main__":
-    gerar_graficos_pertinencia()
+ 
+# 1) VARIÁVEIS: entrada (temperatura) e saída (velocidade do ventilador)
+temperatura = ctrl.Antecedent(np.arange(0, 41, 1), "temperatura")
+velocidade = ctrl.Consequent(np.arange(0, 101, 1), "velocidade")
+ 
+# 2) CONJUNTOS FUZZY: formas (trapézios e triângulos) de cada categoria
+#    trapmf = trapézio [a, b, c, d]   |   trimf = triângulo [a, b, c]
+temperatura["frio"] = fuzz.trapmf(temperatura.universe, [0, 0, 15, 25])
+temperatura["morno"] = fuzz.trimf(temperatura.universe, [15, 25, 35])
+temperatura["quente"] = fuzz.trapmf(temperatura.universe, [25, 35, 40, 40])
+ 
+velocidade["baixa"] = fuzz.trimf(velocidade.universe, [0, 0, 50])
+velocidade["media"] = fuzz.trimf(velocidade.universe, [0, 50, 100])
+velocidade["alta"] = fuzz.trimf(velocidade.universe, [50, 100, 100])
+ 
+# 3) REGRAS: SE ... ENTÃO ...
+regras = [
+    ctrl.Rule(temperatura["frio"], velocidade["baixa"]),
+    ctrl.Rule(temperatura["morno"], velocidade["media"]),
+    ctrl.Rule(temperatura["quente"], velocidade["alta"]),
+]
+ 
+# 4) SISTEMA DE CONTROLE
+sistema = ctrl.ControlSystem(regras)
+ventilador = ctrl.ControlSystemSimulation(sistema)
+ 
+# Testando com várias temperaturas
+for temp in [10, 20, 25, 30, 38]:
+    ventilador.input["temperatura"] = temp
+    ventilador.compute()
+    print(f"{temp}°C -> ventilador a {ventilador.output['velocidade']:.0f}%")
+ 
+# 5) (Opcional) Desenhar os gráficos. Requer: pip install matplotlib
+import matplotlib.pyplot as plt
+temperatura.view()
+velocidade.view()
+plt.show()
 
 #ATENÇÃO: Você deve explicar no resultados o que a lógica fuzzy realiza
