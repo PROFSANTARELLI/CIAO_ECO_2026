@@ -1,0 +1,70 @@
+# ==============================================================================
+# EXEMPLO COMPLETO: SISTEMA DE CONTROLE DE GORJETA (FUZZY)
+# Disciplina: Inteligência Computacional
+# ==============================================================================
+
+import numpy as np
+import skfuzzy as fuzz
+from skfuzzy import control as ctrl
+import matplotlib.pyplot as plt
+
+# --------------------------------------------------------------------------
+# ETAPA 1: DEFINIÇÃO DO UNIVERSO DO DISCURSO (ENTRADAS E SAÍDAS)
+# --------------------------------------------------------------------------
+# Antecedentes: Variáveis de entrada (qualidade do serviço e da comida)
+servico = ctrl.Antecedent(np.arange(0, 11, 1), 'servico')
+comida = ctrl.Antecedent(np.arange(0, 11, 1), 'comida')
+
+# Consequente: Variável de saída (porcentagem da gorjeta de 0 a 25%)
+gorjeta = ctrl.Consequent(np.arange(0, 26, 1), 'gorjeta')
+
+# --------------------------------------------------------------------------
+# ETAPA 2: FUNÇÕES DE PERTINÊNCIA (MEMBERSHIP FUNCTIONS)
+# --------------------------------------------------------------------------
+# Definindo as curvas para a qualidade do serviço (ruim, aceitável e excelente)
+servico['ruim'] = fuzz.trimf(servico.universe, [0, 0, 5])
+servico['aceitavel'] = fuzz.trimf(servico.universe, [0, 5, 10])
+servico['excelente'] = fuzz.trimf(servico.universe, [5, 10, 10])
+
+# Definindo as curvas para a qualidade da comida (péssima e saborosa)
+comida['pessima'] = fuzz.trimf(comida.universe, [0, 0, 5])
+comida['saborosa'] = fuzz.trimf(comida.universe, [5, 10, 10])
+
+# Definindo as curvas para o valor da gorjeta (baixa, média e alta)
+gorjeta['baixa'] = fuzz.trimf(gorjeta.universe, [0, 0, 13])
+gorjeta['media'] = fuzz.trimf(gorjeta.universe, [0, 13, 25])
+gorjeta['alta'] = fuzz.trimf(gorjeta.universe, [13, 25, 25])
+
+# --------------------------------------------------------------------------
+# ETAPA 3: REGRAS FUZZY (SE ... ENTÃO ...)
+# --------------------------------------------------------------------------
+regra1 = ctrl.Rule(servico['ruim'] | comida['pessima'], gorjeta['baixa'])
+regra2 = ctrl.Rule(servico['aceitavel'], gorjeta['media'])
+regra3 = ctrl.Rule(servico['excelente'] | comida['saborosa'], gorjeta['alta'])
+
+# --------------------------------------------------------------------------
+# ETAPA 4: SISTEMA DE CONTROLE E SIMULAÇÃO
+# --------------------------------------------------------------------------
+# Criando controlador agrupando as regras definidas
+controle_gorjeta = ctrl.ControlSystem([regra1, regra2, regra3])
+simulacao = ctrl.ControlSystemSimulation(controle_gorjeta)
+
+# Vamos simular um exemplo prático:
+# Nota do Serviço: 9.2 (Excelente)
+# Nota da Comida: 6.5 (Saborosa)
+simulacao.input['servico'] = 9.2
+simulacao.input['comida'] = 6.5
+
+# Processando os cálculos matemáticos fuzzy (Fuzzificação -> Regras -> Defuzzificação)
+simulacao.compute()
+
+# Obtendo e exibindo o resultado numérico final
+resultado_gorjeta = simulacao.output['gorjeta']
+print(f"Serviço: 9.2 | Comida: 6.5 => Gorjeta Calculada: {resultado_gorjeta:.2f}%")
+
+# --------------------------------------------------------------------------
+# ETAPA 5: VISUALIZAÇÃO GRÁFICA
+# --------------------------------------------------------------------------
+# Mostrando a área resultante na curva de pertinência da gorjeta
+gorjeta.view(sim=simulacao)
+plt.show()
