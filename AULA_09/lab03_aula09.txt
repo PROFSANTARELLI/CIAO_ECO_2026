@@ -29,3 +29,88 @@ Etapa 2: Modelagem: o universo de discurso (com unidade), os termos linguístico
 Etapa 3: Implementação: Crie o código em Python. Pode usar NumPy e Matplotlib.
 Etapa 4: Testes: Teste com no mínimo 4 situações. Registre as entradas, a saída do sistema e a resposta esperada. (coloque tudo no resultados_aula09.md)
 Etapa 5: Entrega: Código-fonte (.py) executável.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+AULA 10
+
+--------------------------------------------------------------------------------
+DESAFIO INVESTIGATIVO: POR QUE O CENTROIDE NÃO DÁ 0% NEM 100%?
+--------------------------------------------------------------------------------
+Problema: Ao simular um incidente com Impacto = 0% e Explorabilidade = 0, a saída calculada pelo sistema foi 4.33% (e não 0%).
+Ao simular Impacto = 100% e Explorabilidade = 10, a saída deu 87.5% (e não 100%).
+
+Missão de vocês nesta aula:
+1. Executar o código com o método 'centroid' e plotar o gráfico de saída.
+2. Explicar por que o Centroide (centro de massa geométrico) não atinge as pontas.
+3. Testar a Abordagem A (Usar Trapézio 'trapmf' na borda superior da Urgência Crítica) versus a Abordagem B (Alterar o método de defuzzificação para 'MOM' - Mean of Maximum).
+4. Registrar no relatório resultados_aula10.md qual abordagem preserva a suavidade no meio da escala e crava 100% nos extremos.
+--------------------------------------------------------------------------------
+
+================================================================================
+AULA 10 — MOTOR DE INFERÊNCIA MAMDANI E SUPERFÍCIE 3D (SPRINT 2 DA AC-3)
+Disciplina: Inteligência Computacional
+================================================================================
+
+INSTRUÇÕES GERAIS DE ENTREGA:
+--------------------------------------------------------------------------------
+1 - Gere o diretório AULA_10 na raiz do seu repositório e crie o arquivo resultados_aula10.md
+
+2 - Registre no arquivo resultados_aula10.md:
+    a) A resposta explicativa do "Desafio dos Extremos" (Centroide vs. Trapézio/MOM).
+    b) A tabela da Matriz de Regras 3x3 codificada.
+    c) A análise interpretativa da Superfície de Decisão 3D gerada.
+
+3 - Construa do zero e execute os códigos em Python nos arquivos:
+    - lab01_aula10.py
+
+4 - Gere o resultado e salve a imagem com nome 'superficie_decisao.png' comprovando a continuidade da superfície 3D.
+
+================================================================================
+EXERCÍCIO INVESTIGATIVO: DESAFIO DOS EXTREMOS
+================================================================================
+Problema: Ao testar o sistema com entradas mínimas (0, 0), o resultado foi 4.33% 
+e não 0%. Com entradas máximas (100, 10), o resultado foi 87.5% e não 100%.
+
+Questões a Responder no Relatório resultados_aula10.md:
+1. Por que o método do Centroide com triângulos não atinge matematicamente os 
+   extremos 0% e 100%?
+
+2. O que acontece com o resultado final se alterarmos a função da Urgência 
+   Crítica para Trapézio (trapmf) na borda superior?
+
+3. O que acontece se alterarmos o método de defuzzificação para 'MOM' 
+   (Mean of Maximum)? Qual abordagem é mais recomendável e por quê?
+
+================================================================================
+MATRIZ DE REGRAS COMPLETA (3 x 3 = 9 REGRAS)
+================================================================================
++-----------------------+------------------+------------------+------------------+
+| Impacto \ Explorab.   | Baixa (0-4)      | Moderada (2-8)   | Alta (6-10)      |
++-----------------------+------------------+------------------+------------------+
+| Baixo (0-40)          | Urgência Baixa   | Urgência Baixa   | Urgência Média   |
+| Médio (20-80)         | Urgência Média   | Urgência Alta    | Urgência Alta    |
+| Alto (60-100)         | Urgência Crítica | Urgência Crítica | Urgência Crítica |
++-----------------------+------------------+------------------+------------------+
+
+================================================================================
+CHECAGEM DE ARTEFATOS (AULA 10)
+================================================================================
+- [ ] Diretório AULA_10/ gerado na raiz.
+- [ ] Arquivo resultados_aula10.md com o Desafio dos Extremos respondido.
+- [ ] Arquivo lab01_aula10.py com as 9 regras funcionando sem lacunas de cobertura.
+- [ ] Imagem superficie_decisao.png salva demonstrando a superfície 3D.
+================================================================================
+
