@@ -16,7 +16,7 @@ Sistemas são desenvolvidos para resolver problemas. Assim, precisamos do proble
 Problema: Uma empresa de alimentos deseja saber a validade real de um de seus produtos em função da temperatura e umidade relativa do ambiente de armazenamento.
 A validade máxima desse produto é de 60 dias se armazenado a baixa temperatura em ambiente seco.
 
-O projeto do Sistema Fuzzy será organizado conforme as três etapas do raciocínio fuzzy:
+O Sistema Fuzzy será organizado conforme as três etapas do raciocínio fuzzy:
 1 - Fuzzificação
 2 - Inferência Fuzzy
 3 - Defuzzificação
@@ -53,7 +53,7 @@ Variáveis de Entrada:
 
 !pip install scikit-fuzzy
 
-# [2] Fuzzificação
+#Fuzzificação
 import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
@@ -115,7 +115,7 @@ rule3 = ctrl.Rule(umidade['média'], validade['aceitável'])
 validade_ctrl = ctrl.ControlSystem([rule1, rule2, rule3])
 validade_simulador = ctrl.ControlSystemSimulation(validade_ctrl)
 
-# Entranda da temperatura
+# Entrada da temperatura
 while True:
   temp = float(input('Digite a T (ºC): '))
   if(temp<0 or temp >40):
