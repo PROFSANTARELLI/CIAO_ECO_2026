@@ -29,3 +29,19 @@ def calcular_urgencia(simulador, valor_impacto):
     simulador.input['impacto'] = valor_impacto
     simulador.compute()
     return simulador.output['urgencia']
+
+if __name__ == "__main__":
+    simulador = criar_sistema_triagem()
+    
+    # Casos de teste
+    entradas_teste = [20.0, 45.0, 90.0]
+
+    print("=" * 55)
+    print("      SIMULAÇÃO FUZZY")
+    print("=" * 55)
+
+    for valor in entradas_teste:
+        urgencia_calculada = calcular_urgencia(simulador, valor)
+        print(f"-> Entrada (Impacto): {valor:5.1f}% | Saída (Urgência): {urgencia_calculada:5.2f}%")
+
+    print("=" * 55)
