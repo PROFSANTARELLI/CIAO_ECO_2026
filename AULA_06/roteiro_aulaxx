@@ -1,0 +1,31 @@
+================================================================================
+AULA 11 — VALIDAÇÃO EXPERIMENTAL E FECHAMENTO DA AC-3 (SPRINT 3)
+Valor: 0,5 ponto
+================================================================================
+
+INSTRUÇÕES GERAIS:
+--------------------------------------------------------------------------------
+1 - Gere o diretório AULA_11 na raiz do seu repositório Git e crie o arquivo resultados_aula11_ciao.md
+2 - Baixe na máquina ou copie para o Google Colab o código de inferência usado na aula 10
+3 - Crie a suíte de testes unitários no arquivo 'test_fuzzy_engine.py'.
+4 - Execute os testes via terminal com 'pytest' e registre a cobertura/resultado no arquivo .md.
+5 - Garanta que contenha:
+    - engine.py e model.py
+    - test_fuzzy_engine.py
+    - resultados_aula11_ciao.md
+6 - Faça o git commit.
+
+================================================================================
+ROTEIRO DE EXECUÇÃO DOS TESTES
+================================================================================
+1. Instalação do pytest (caso não instalado):
+   pip install pytest ou !pip install pytest
+
+2. Execução da suíte completa com relatório detalhado:
+   pytest -v test_fuzzy_engine.py
+
+3. Verificação do tempo de latência e saída do console:
+   pytest -s test_fuzzy_engine.py
+================================================================================
+
+CÓDIGO DE TESTE
