@@ -1,30 +1,26 @@
-AULA 11 - CIAO
+================================================================================
+AULA 11 — VALIDAÇÃO EXPERIMENTAL E FECHAMENTO DA AC-3 (SPRINT 3)
+================================================================================
 
 PARTE 1 - CRONOGRAMA PROJETO TECH
 PARTE 2 - Explicação e Demo aula
-PARTE 3 - CONSTRUÇÃO E ENTREGA DA AC3 - ETAPA 3(FINAL)
-
+PARTE 3 - CONSTRUÇÃO E ENTREGA DA AC3 - ETAPA 3(FINAL) - VALOR DE 0,5 PONTO
 
 ================================================================================
-AULA 11 — VALIDAÇÃO EXPERIMENTAL E FECHAMENTO DA AC-3 (SPRINT 3)
-Valor: 0,5 ponto
-================================================================================
-
-INSTRUÇÕES GERAIS:
+ETAPA 1 - INSTRUÇÕES GERAIS:
 --------------------------------------------------------------------------------
 1 - Gere o diretório AULA_11 na raiz do seu repositório Git e crie o arquivo resultados_aula11_ciao.md
 2 - Baixe na máquina ou copie para o Google Colab o código de inferência usado na aula 10
 3 - Crie a suíte de testes unitários no arquivo 'test_fuzzy_engine.py'.
 4 - Execute os testes via terminal com 'pytest' e registre a cobertura/resultado no arquivo .md.
 5 - Modifique os valores de testes para rodar o primeiro teste certo, o segundo com erro e o terceiro (após reajustar) com certo.
-5 - Garanta que tenha todos os arquios na pasta AULA_11:
+6 - Garanta que tenha todos os arquios na pasta AULA_11:
     - engine.py e model.py
     - test_fuzzy_engine.py
     - resultados_aula11_ciao.md
-6 - Faça o git commit.
 
 ================================================================================
-ROTEIRO DE EXECUÇÃO DOS TESTES
+EXECUÇÃO DOS TESTES
 ================================================================================
 RODE A PRIMEIRA VEZ SEM ERRO:
 1. Instalação do pytest (caso não instalado):
@@ -61,4 +57,115 @@ RODE A TERCEIRA VEZ SEM ERRO:
    pytest -s test_fuzzy_engine.py
 
 4. Print os resultados e salve em resultados_aula11_ciao.md
+
+
+
 ================================================================================
+ETAPA 2 - SISTEMA DE TRIAGEM MÉDICA DE UTI
+================================================================================
+Objetivo: Desenvolver do zero um motor de inferência fuzzy para classificação de risco clínico de pacientes em UTI,
+explorando saltos não-lineares e funções trapezoidais de saturação para sinais vitais críticos.
+
+1. CENÁRIO E ESPECIFICAÇÃO
+Um hospital universitário quer automatizar a pré-triagem de alertas na UTI.
+Sinais vitais como Saturação de Oxigênio (SpO_2) possuem comportamentos não-lineares graves:
+ - uma queda de 98% para 94% é tolerável, mas uma queda de 93% para 89% indica hipóxia aguda e deve disparar um alerta crítico imediato.
+
+Especificação das Variáveis Linguísticas:
+	Entrada 1 — Frequência Cardíaca (FC∈[40,160]" bpm" ):
+	bradicardia: Triângulo [40,40,60]
+	normal: Triângulo [50,75,100]
+	taquicardia: Trapézio [90,110,160,160]
+	Entrada 2 — Saturação de Oxigênio (〖"SpO" 〗_2∈[70,100]%):
+	critica: Trapézio [70,70,88,91]
+	limitrofe: Triângulo [89,93,96]
+	normal: Trapézio [94,97,100,100]
+	Saída — Risco Clínico (Risco∈[0,100]%):
+	baixo: Triângulo [0,0,35]
+	moderado: Triângulo [25,50,75]
+	critico: Trapézio [65,85,100,100]
+
+Tabela de Regras Clínicas:
+	R1: SE SpO_2 é critica ⟹ Risco é critico (Regra de Ouro/Saturação).
+	R2: SE FC é bradicardia E SpO_2 é limitrofe ⟹ Risco é critico.
+	R3: SE FC é taquicardia E SpO_2 é limitrofe ⟹ Risco é critico.
+	R4: SE FC é normal E SpO_2 é limitrofe ⟹ Risco é moderado.
+	R5: SE FC é normal E SpO_2 é normal ⟹ Risco é baixo.
+
+2. ESQUELETO DO CÓDIGO
+Criar o arquivo uti_triagem.py e completar os trechos indicados com TODO:
+
+import sys
+import os
+import numpy as np
+import skfuzzy as fuzzy
+from skfuzzy import control as ctrl
+
+def criar_sistema_triagem_uti():
+    """
+    TODO:
+    1. Criar os antecedentes (freq_cardiaca: 40-160, spo2: 70-100) e o consequente (risco: 0-100)
+    2. Configurar o método de defuzzificação para 'centroid'
+    3. Mapear as funções de pertinência (trimf e trapmf) de acordo com a especificação
+    4. Criar as 5 regras de inferência clínicas
+    5. Retornar o ControlSystemSimulation compilado
+    """
+    pass  # Substitua pelo seu código
+
+
+def avaliar_paciente(simulador, bpm, spo2_val):
+    """
+    TODO:
+    1. Validar se bpm está em [40, 160]. Caso contrário, lançar ValueError
+    2. Validar se spo2_val está em [70, 100]. Caso contrário, lançar ValueError
+    3. Injetar as entradas no simulador e executar o compute()
+    4. Retornar a saída 'risco'
+    """
+    pass  # Substitua pelo seu código
+
+if __name__ == "__main__":
+    # Teste rápido manual em tela
+    sim = criar_sistema_triagem_uti()
+    print("Sistema de UTI instanciado com sucesso!")
+
+3. CONSTRUÇÃO DOS TESTES 
+Criar o arquivo test_uti_triagem.py e construir os testes utilizando a estrutura:
+import sys
+import os
+import pytest
+from src.uti_triagem import criar_sistema_triagem_uti, avaliar_paciente
+
+@pytest.fixture
+def simulador_uti():
+    return criar_sistema_triagem_uti()
+
+# ------------------------------------------------------------------------------
+# MISSÃO: ESCREVER OS 3 TESTES ABAIXO
+# ------------------------------------------------------------------------------
+
+def test_paciente_saudavel_baixo_risco(simulador_uti):
+    """
+    MISSÃO 1: Testar um paciente com batimentos normais (ex: 75 bpm) e SpO2 98%.
+    Assert: O Risco Clínico deve ser estritamente menor que 30.0%.
+    """
+    pass
+
+def test_salto_nao_linear_queda_spo2(simulador_uti):
+    """
+    MISSÃO 2: Comprovar o salto não-linear da Lógica Fuzzy.
+    - Avalie o risco com SpO2 = 95% (deve ser < 35.0%).
+    - Avalie o risco com SpO2 = 89% (deve dar um salto para > 65.0%).
+    Assert: Garanta que o risco para 89% seja significativamente maior que para 95%.
+    """
+    pass
+
+def test_validacao_limites_fisiologicos(simulador_uti):
+    """
+    MISSÃO 3: Garantir o tratamento de exceção para leituras inválidas de sensores.
+    Assert: Use 'with pytest.raises(ValueError)' para testar bpm < 40 e SpO2 > 100%.
+    """
+    pass
+
+4 - Ajustes todos os erros que encontrar para que o sistema e o script de testes rode sem erros.
+5 - Coloque os resultados no arquivo resultados_aula11_ciao.md
+
