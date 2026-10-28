@@ -1,6 +1,5 @@
 # ==============================================================================
 # AULA 11 — SPRINT 3 (AC-3): SUÍTE DE TESTES AUTOMATIZADOS (PYTEST)
-# Disciplina: Inteligência Computacional
 # Objetivo: Validação de Borda, Monotonicidade e Desempenho do Motor Fuzzy
 # ==============================================================================
 
