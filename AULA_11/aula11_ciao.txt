@@ -4,3 +4,61 @@ PARTE 1 - CRONOGRAMA PROJETO TECH
 PARTE 2 - Explicação e Demo aula
 PARTE 3 - CONSTRUÇÃO E ENTREGA DA AC3 - ETAPA 3(FINAL)
 
+
+================================================================================
+AULA 11 — VALIDAÇÃO EXPERIMENTAL E FECHAMENTO DA AC-3 (SPRINT 3)
+Valor: 0,5 ponto
+================================================================================
+
+INSTRUÇÕES GERAIS:
+--------------------------------------------------------------------------------
+1 - Gere o diretório AULA_11 na raiz do seu repositório Git e crie o arquivo resultados_aula11_ciao.md
+2 - Baixe na máquina ou copie para o Google Colab o código de inferência usado na aula 10
+3 - Crie a suíte de testes unitários no arquivo 'test_fuzzy_engine.py'.
+4 - Execute os testes via terminal com 'pytest' e registre a cobertura/resultado no arquivo .md.
+5 - Modifique os valores de testes para rodar o primeiro teste certo, o segundo com erro e o terceiro (após reajustar) com certo.
+5 - Garanta que tenha todos os arquios na pasta AULA_11:
+    - engine.py e model.py
+    - test_fuzzy_engine.py
+    - resultados_aula11_ciao.md
+6 - Faça o git commit.
+
+================================================================================
+ROTEIRO DE EXECUÇÃO DOS TESTES
+================================================================================
+RODE A PRIMEIRA VEZ SEM ERRO:
+1. Instalação do pytest (caso não instalado):
+   pip install pytest ou !pip install pytest
+
+2. Execução da suíte completa com relatório detalhado:
+   pytest -v test_fuzzy_engine.py
+
+3. Verificação do tempo de latência e saída do console:
+   pytest -s test_fuzzy_engine.py
+
+4. Print os resultados e salve em resultados_aula11_ciao.md
+
+
+RODE A SEGUNDA COM ERROS PROPOSITAIS:
+1. Faça modificação de valores para gerar erros induzidos no arquivo test_fuzzy_engine.py
+
+2. Execução da suíte completa com relatório detalhado:
+   pytest -v test_fuzzy_engine.py
+
+3. Verificação do tempo de latência e saída do console:
+   pytest -s test_fuzzy_engine.py
+
+4. Print os resultados e salve em resultados_aula11_ciao.md
+
+
+RODE A TERCEIRA VEZ SEM ERRO:
+1. Corrija os erros induzidos na etapa 2
+
+2. Execução da suíte completa com relatório detalhado:
+   pytest -v test_fuzzy_engine.py
+
+3. Verificação do tempo de latência e saída do console:
+   pytest -s test_fuzzy_engine.py
+
+4. Print os resultados e salve em resultados_aula11_ciao.md
+================================================================================
