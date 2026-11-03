@@ -1,1 +1,214 @@
+INTRODUÇÃO À OTIMIZAÇÃO MULTIOBJETIVO
+Fronteira de Pareto e Algoritmo NSGA-II com Python (pymoo)
+
+### 1. Um problema do mundo real
+
+Imagine que você trabalha em uma empresa de tecnologia responsável por manter um sistema utilizado por milhares de pessoas. Esse sistema está hospedado em cinco servidores diferentes.
+A empresa precisa distribuir a carga de processamento entre esses servidores, mas existem dois objetivos:
+ 1. Minimizar o custo: a empresa quer gastar menos com infraestrutura.
+ 2. Minimizar a latência: a empresa quer que o sistema responda o mais rápido possível.
+
+Agora pense:
+ - Se você direcionar toda a carga para os servidores mais baratos, o que pode acontecer? - Talvez eles não tenham o melhor desempenho e o sistema fique lento.
+ - E se você direcionar toda a carga para os servidores mais rápidos? - Provavelmente o custo operacional aumentará.
+
+Perceba o problema: melhorar um objetivo pode prejudicar o outro. É exatamente esse tipo de situação que queremos resolver com a Otimização Multiobjetivo.
+
+2. O que é Otimização Multiobjetivo?
+
+Primeiro, precisamos entender a diferença entre duas formas de otimização.
+
+**Otimização Mono-objetivo**
+Existe apenas um objetivo principal. Exemplo: encontrar a rota de menor custo para realizar uma entrega.
+
+O algoritmo procura a solução que apresenta o menor custo possível.
+
+**Otimização Multiobjetivo**
+Existem dois ou mais objetivos que precisam ser considerados simultaneamente. Exemplo: escolher uma rota que ofereça:
+- Menor custo de combustível.
+- Menor tempo de entrega.
+- Menor distância percorrida.
+
+O problema é que nem sempre conseguimos minimizar todos esses objetivos ao mesmo tempo. Uma rota pode ser mais rápida, mas mais cara. Outra pode ser mais barata, mas demorar mais.
+Portanto, não estamos procurando necessariamente uma única resposta perfeita. Estamos procurando um conjunto de boas alternativas.
+
+Essa é a principal diferença: na otimização multiobjetivo, precisamos entender o equilíbrio entre os objetivos.
+
+3. O que é Trade-off?
+Trade-off significa uma relação de compensação entre objetivos.
+
+Imagine três configurações possíveis para distribuir a carga de um sistema:
+
+| Configuração | Custo por hora | Latência |
+| A            | US$ 90         | 100 ms |
+| B            | US$ 100        | 80 ms |
+| C            | US$ 120        | 55 ms |
+
+Observe:
+- A é a configuração mais barata, mas apresenta a maior latência.
+- C é a mais rápida, mas apresenta o maior custo.
+- B oferece um equilíbrio entre os dois objetivos.
+
+Qual é a melhor?
+
+Resposta: Depende da necessidade da empresa.
+ - Se a prioridade for economizar, A pode ser interessante.
+ - Se a prioridade for velocidade, C pode ser a melhor escolha.
+- Se a empresa procurar equilíbrio, B pode ser mais adequada.
+
+Não existe uma resposta universalmente melhor. Existe uma solução mais adequada às prioridades do negócio. Essa relação entre objetivos é chamada de Trade-off.
+
+
+4. O que é Dominância de Pareto?
+
+Imagine que temos estas quatro configurações:
+
+| Solução | Custo | Latência |
+| A       | 100   | 80       |
+| B       | 120   | 55       |
+| C       | 90    | 100      |
+| D       | 130   | 95       |
+
+Considere que queremos minimizar os dois objetivos. Uma solução domina outra quando:
+1. É igual ou melhor em todos os objetivos.
+2. É estritamente melhor em pelo menos um deles.
+
+Vamos comparar A e D:
+- A custa 100, enquanto D custa 130.
+- A apresenta latência 80, enquanto D apresenta 95.
+
+A é melhor nos dois objetivos. Portanto, **A domina D**.
+A solução D não faz sentido como escolha enquanto A estiver disponível, porque podemos obter custo menor e latência menor simultaneamente.
+
+Agora compare A e B:
+- A é mais barata.
+- B é mais rápida.
+
+Nenhuma domina a outra. Existe uma compensação entre os objetivos. O mesmo acontece nas comparações entre A, B e C.
+
+5. O que é a Fronteira de Pareto?
+A Fronteira de Pareto reúne as soluções que não são dominadas por nenhuma outra solução considerada. No nosso exemplo:
+- A permanece.
+- B permanece.
+- C permanece.
+- D é eliminada porque A e B apresentam resultados melhores nos dois objetivos.
+
+Assim, a Fronteira de Pareto é formada por A, B e C.
+
+Atenção: a Fronteira de Pareto não escolhe automaticamente a melhor solução para a empresa. Ela apresenta as alternativas eficientes para que alguém possa tomar a decisão final.
+Essa escolha depende das prioridades do negócio.
+
+6. Como o computador encontra a Fronteira de Pareto?
+
+Agora surge uma questão:
+- Se temos milhares ou milhões de combinações possíveis de distribuição de recursos, como encontrar boas alternativas sem testar todas elas?
+
+É aqui que entra o NSGA-II.
+
+NSGA-II significa: Non-dominated Sorting Genetic Algorithm II - Em português: Algoritmo Genético II baseado em Ordenação por Não-Dominância.
+
+Ele é um algoritmo evolutivo multiobjetivo. Sua lógica aproveita conceitos dos Algoritmos Genéticos, mas utiliza mecanismos específicos para trabalhar com vários objetivos simultaneamente.
+Em vez de procurar apenas uma solução vencedora, ele trabalha com uma população de soluções e procura construir uma boa aproximação da Fronteira de Pareto.
+
+Vamos imaginar que o computador precise encontrar a melhor distribuição de carga entre cinco servidores. O processo ocorre em etapas.
+
+**ETAPA 1: Criar uma população inicial**
+
+O algoritmo cria várias possibilidades de distribuição da carga. Cada indivíduo representa uma configuração diferente.
+
+Exemplo:
+
+solucao_A = [20, 20, 20, 20, 20]
+solucao_B = [40, 10, 20, 10, 20]
+solucao_C = [10, 40, 10, 20, 20]
+
+Cada vetor representa a porcentagem de carga atribuída a cada servidor.
+
+**ETAPA 2: Avaliar os objetivos**
+O computador calcula o resultado de cada solução. Para cada indivíduo, calcula:
+- Custo operacional.
+- Latência do sistema.
+Agora cada solução possui dois resultados que precisam ser comparados.
+
+**ETAPA 3: Ordenar por Dominância de Pareto**
+O NSGA-II compara as soluções e organiza os indivíduos em grupos chamados *Fronts*.
+- Front 1: soluções não dominadas.
+- Front 2: soluções não dominadas entre aquelas que sobraram depois da retirada do Front 1.
+- Front 3: próximo grupo, seguindo a mesma lógica.
+O primeiro Front representa as melhores soluções segundo o critério de dominância.
+
+**ETAPA 4: Calcular a Crowding Distance**
+Aqui temos outro conceito importante.nImagine que o algoritmo encontrou dez soluções muito boas, mas todas estão praticamente no mesmo ponto do gráfico.
+
+Isso não seria interessante, pois teríamos pouca variedade de alternativas. A Crowding Distance, ou distância de aglomeração, ajuda a preservar a diversidade das soluções.
+
+Ela favorece indivíduos que estão em regiões menos ocupadas da fronteira. Em palavras simples: O NSGA-II procura manter soluções boas, mas também procura manter soluções diferentes entre si.
+
+**ETAPA 5: Evoluir a população**
+O algoritmo utiliza operadores evolutivos:
+- Seleção: escolhe indivíduos para reprodução.
+- Crossover SBX: combina características de duas soluções com variáveis reais.
+- Mutação Polinomial: realiza pequenas alterações nas variáveis para introduzir diversidade.
+
+**ETAPA 6: Repetir o processo**
+Os descendentes são avaliados junto com a população anterior.
+O algoritmo organiza novamente as soluções por dominância e diversidade, selecionando quem continuará na próxima geração.
+Esse processo se repete até atingir o critério de parada, como uma quantidade definida de gerações.
+
+**ETAPA 7: Apresentar a Fronteira de Pareto**
+
+Ao final, o algoritmo retorna um conjunto de soluções não dominadas encontradas durante a otimização. O resultado é uma aproximação da Fronteira de Pareto.
+
+A empresa poderá analisar as alternativas e escolher aquela que melhor atende às suas prioridades.
+
+
+O que é o pymoo?
+O pymoo é um framework Python que disponibiliza algoritmos de otimização mono e multiobjetivo, incluindo o NSGA-II.
+
+Em vez de programarmos toda a matemática do algoritmo, utilizamos a biblioteca e concentramos nosso desenvolvimento na definição do problema.
+
+Para usar o pymoo, precisamos fornecer três informações principais:
+1. O problema: quais são as variáveis, os objetivos e as restrições?
+
+2. O algoritmo: qual estratégia de otimização queremos utilizar? Neste caso, NSGA-II.
+
+3. O critério de parada: quantas gerações serão executadas ou quando a otimização deverá terminar?
+
+Um exemplo:
+
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.optimize import minimize
+
+# Configuração do algoritmo
+algorithm = NSGA2(
+    pop_size=100
+)
+
+# Executa a otimização
+resultado = minimize(
+    problem,
+    algorithm,
+    ('n_gen', 150),
+    seed=42,
+    verbose=False
+)
+
+# Resultados encontrados
+solucoes = resultado.X
+objetivos = resultado.F
+```
+
+Vamos entender:
+
+- `NSGA2`: seleciona o algoritmo que será utilizado.
+- `pop_size=100`: define uma população de 100 indivíduos.
+- `problem`: representa o problema que desenvolvemos.
+- `n_gen=150`: define o limite de 150 gerações.
+- `seed=42`: controla a aleatoriedade para permitir reproduzir a execução.
+- `resultado.X`: contém as soluções encontradas, ou seja, as configurações das variáveis.
+- `resultado.F`: contém os valores dos objetivos calculados para essas soluções.
+
+O pymoo executa o processo de otimização. Nós precisamos fornecer corretamente a modelagem matemática do problema.
+
+
 
