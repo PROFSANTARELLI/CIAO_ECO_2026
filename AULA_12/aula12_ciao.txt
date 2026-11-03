@@ -1,7 +1,7 @@
 INTRODUÇÃO À OTIMIZAÇÃO MULTIOBJETIVO
 Fronteira de Pareto e Algoritmo NSGA-II com Python (pymoo)
 
-### 1. Um problema do mundo real
+### 1. Analisando um problema do mundo real
 
 Imagine que você trabalha em uma empresa de tecnologia responsável por manter um sistema utilizado por milhares de pessoas. Esse sistema está hospedado em cinco servidores diferentes.
 A empresa precisa distribuir a carga de processamento entre esses servidores, mas existem dois objetivos:
