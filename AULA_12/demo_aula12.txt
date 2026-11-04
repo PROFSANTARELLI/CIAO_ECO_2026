@@ -21,7 +21,8 @@ O algoritmo encontra as alternativas. A empresa decidirá qual delas atende melh
 | 4        | 3,00                  | 8             |
 | 5        | 1,50                  | 30            |
 
-Observe que o servidor 3 é o mais barato, mas apresenta latência elevada. Já o servidor 4 possui a menor latência, mas apresenta o maior custo.
+Observe que o servidor 3 é o mais barato, mas apresenta latência elevada. 
+Já o servidor 4 possui a menor latência, mas apresenta o maior custo.
 
 Desafio: encontrar diferentes distribuições de carga que equilibrem esses dois objetivos.
 
