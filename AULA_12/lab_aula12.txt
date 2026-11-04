@@ -1,0 +1,235 @@
+================================================================================
+AULA 12 — OTIMIZAÇÃO MULTIOBJETIVO E NSGA-II (SPRINT 1 DA AC-4)
+================================================================================
+
+INSTRUÇÕES DE INSTALAÇÃO:
+--------------------------------------------------------------------------------
+Instale a biblioteca pymoo para otimização evolucionária multiobjetivo:
+pip install pymoo matplotlib OU !pip install pymoo matplotlib
+
+INSTRUÇÕES GERAIS DE ENTREGA:
+--------------------------------------------------------------------------------
+1 - Crie a pasta AULA_12 na raiz do seu repositório Git.
+2 - Crie o arquivo resultados_aula12_CIAO.md' contendo:
+    a) Compreenda e execute todos os eexerciios abaixo
+    b) Após rodar com sucesso, copie e cole todos os resultados
+
+
+================================================================================
+ROTEIRO DE EXERCÍCIOS PRÁTICOS
+================================================================================
+EXERCÍCIO 1: Compra de Servidores Cloud
+Objetivo: Demonstrar a Fronteira de Pareto simples com 2 objetivos opostos (Minimizar Custo Financeiro vs. Minimizar Latência).
+# ==============================================================================
+!pip install pymoo matplotlib -q
+
+import numpy as np
+import matplotlib.pyplot as plt
+from pymoo.core.problem import ElementwiseProblem
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.optimize import minimize
+
+class CloudProblem(ElementwiseProblem):
+    def __init__(self):
+        super().__init__(n_var=1, n_obj=2, xl=np.array([1.0]), xu=np.array([32.0]))
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        vcpus = x[0]
+        f1_custo = vcpus * 15.0         # R$ 15 por vCPU
+        f2_latencia = 300.0 / vcpus     # Latência cai com mais vCPUs
+        out["F"] = [f1_custo, f2_latencia]
+
+res1 = minimize(CloudProblem(), NSGA2(pop_size=20), termination=('n_gen', 30), seed=1)
+
+# Visualização
+plt.figure(figsize=(7, 4))
+plt.scatter(res1.F[:, 0], res1.F[:, 1], color='blue', s=50)
+plt.title("Exercício 1 — Fronteira de Pareto: Cloud")
+plt.xlabel("Custo (R$) [Minimizar]")
+plt.ylabel("Latência (ms) [Minimizar]")
+plt.grid(True)
+plt.show()
+
+===================================================================================================
+EXERCÍCIO 2: Triagem de Incidentes SOC
+Objetivo: Completar a classe do problema e a definição dos objetivos para o SOC Autônomo.
+Preencha os trechos indicados com TODO
+
+import numpy as np
+from pymoo.core.problem import ElementwiseProblem
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.optimize import minimize
+
+class SOCAllocationProblem(ElementwiseProblem):
+    def __init__(self):
+        # TODO 1: Defina 2 variáveis (x1: 1 a 50 analistas, x2: 1 a 10 regimento de segurança)
+        # TODO 2: Defina 2 objetivos a serem minimizados
+        super().__init__(
+            n_var=2,
+            n_obj=2,
+            xl=np.array([1.0, 1.0]),
+            xu=np.array([50.0, 10.0])
+        )
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        analistas, regimento = x[0], x[1]
+        
+        # TODO 3: Implemente a fórmula do Custo (R$ 100 por analista + R$ 50 por regimento)
+        f1_custo = None 
+        
+        # TODO 4: Implemente o Tempo de Resposta em minutos (200 / analistas + 50 / regimento)
+        f2_tempo = None 
+
+        out["F"] = [f1_custo, f2_tempo]
+
+# TODO 5: Instancie o algoritmo NSGA2 com pop_size=30 e execute a minimização com 40 gerações
+
+==============================================================================================================
+EXERCÍCIO 3: Logística de Drones
+Objetivo: Otimização com 3 Objetivos (Custo, Tempo de Entrega e Pegada de Carbono).Python# 
+
+import numpy as np
+import matplotlib.pyplot as plt
+from pymoo.core.problem import ElementwiseProblem
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.optimize import minimize
+
+class DroneProblem(ElementwiseProblem):
+    def __init__(self):
+        super().__init__(n_var=2, n_obj=3, xl=np.array([10.0, 1.0]), xu=np.array([80.0, 5.0]))
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        velocidade, carga = x[0], x[1]
+        f1_tempo = 1000.0 / velocidade
+        f2_custo = (velocidade ** 2) * 0.1 + (carga * 50)
+        f3_co2 = (velocidade * 1.5) / carga
+        out["F"] = [f1_tempo, f2_custo, f3_co2]
+
+res3 = minimize(DroneProblem(), NSGA2(pop_size=40), termination=('n_gen', 50), seed=42)
+
+fig = plt.figure(figsize=(8, 6))
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(res3.F[:, 0], res3.F[:, 1], res3.F[:, 2], color='green', s=40)
+ax.set_xlabel("Tempo")
+ax.set_ylabel("Custo")
+ax.set_zlabel("CO2")
+plt.title("Exercício 3 — Pareto 3D: Drones")
+plt.show()
+
+# ==============================================================================
+EXERCÍCIO 4: Seleção de Portfólio de Investimentos
+Objetivo: Implementar restrição de investimento e objetivos de Risco vs. Retorno.
+
+import numpy as np
+from pymoo.core.problem import ElementwiseProblem
+
+class PortfolioProblem(ElementwiseProblem):
+    def __init__(self):
+        # x1: % Renda Fixa (0 a 100), x2: % Ações (0 a 100)
+        super().__init__(n_var=2, n_obj=2, xl=np.array([0.0, 0.0]), xu=np.array([100.0, 100.0]))
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        rf, acoes = x[0], x[1]
+
+        # TODO 1: O Retorno Esperado é (rf * 0.08 + acoes * 0.18). 
+        # Como o pymoo MINIMIZA por padrão, inverta o sinal do retorno para maximizá-lo!
+        f1_retorno_negativo = None 
+
+        # TODO 2: O Risco é dado por (rf * 0.02 + acoes * 0.25). Queremos MINIMIZAR o risco.
+        f2_risco = None 
+
+        out["F"] = [f1_retorno_negativo, f2_risco]
+
+# TODO 3: Execute o NSGA-II e plote o Risco (eixo X) versus Retorno Real (eixo Y - lembre de reverter o sinal!)
+
+================================================================================
+EXERCÍCIO 5: Trade-off de Modelos de Machine Learning
+Objetivo: Escolha de hiperparâmetros minimizando o Erro de Predição e a Complexidade (Tempo de Inferência).
+
+import numpy as np
+import matplotlib.pyplot as plt
+from pymoo.core.problem import ElementwiseProblem
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.optimize import minimize
+
+class MLTuningProblem(ElementwiseProblem):
+    def __init__(self):
+        # x1: Profundidade da Árvore (1 a 30), x2: Número de Estimadores (10 a 200)
+        super().__init__(n_var=2, n_obj=2, xl=np.array([1.0, 10.0]), xu=np.array([30.0, 200.0]))
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        depth, n_trees = x[0], x[1]
+        f1_erro = 0.5 / (depth * np.log10(n_trees))   # Erro cai com mais árvores/profundidade
+        f2_latencia_ms = (depth * 0.2) + (n_trees * 0.5) # Latência sobe
+        out["F"] = [f1_erro, f2_latencia_ms]
+
+res5 = minimize(MLTuningProblem(), NSGA2(pop_size=30), termination=('n_gen', 40), seed=7)
+
+plt.figure(figsize=(7, 4))
+plt.scatter(res5.F[:, 0], res5.F[:, 1], color='purple', s=45)
+plt.title("Exercício 5 — Erro vs. Tempo de Inferência (ML)")
+plt.xlabel("Erro do Modelo [Minimizar]")
+plt.ylabel("Tempo de Resposta (ms) [Minimizar]")
+plt.grid(True)
+plt.show()
+
+
+==============================================================================
+EXERCÍCIO 6: Desafio Integrado com Restrições
+Objetivo: Aplicar uma restrição de desigualdade ($G \le 0$) em um problema de infraestrutura.
+# ==============================================================================
+
+import numpy as np
+from pymoo.core.problem import ElementwiseProblem
+
+class EVBatteryProblem(ElementwiseProblem):
+    def __init__(self):
+        # x1: Potência de Carga (10 a 150 kW), x2: Temperatura do Ar (15 a 45 °C)
+        # TODO 1: Configurar 2 variáveis, 2 objetivos e 1 RESTRIÇÃO de desigualdade (n_ieq_constr=1)
+        super().__init__(n_var=2, n_obj=2, n_ieq_constr=0, xl=np.array([10.0, 15.0]), xu=np.array([150.0, 45.0]))
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        potencia, temp = x[0], x[1]
+
+        f1_tempo_recarga = 3000.0 / potencia
+        f2_desgaste_bateria = (potencia ** 1.5) * (temp / 20.0)
+
+        # TODO 2: Adicione a restrição de segurança: O desgaste (f2) NÃO PODE ultrapassar 1500 unidades.
+        # Dica no pymoo: Restrições de desigualdade devem ser escritas na forma G(x) <= 0.
+        # Logo: g1 = f2_desgaste_bateria - 1500.0
+        
+        out["F"] = [f1_tempo_recarga, f2_desgaste_bateria]
+        # TODO 3: Passe a restrição para a saída: out["G"] = [g1]
+
+# TODO 4: Execute a otimização com o NSGA-II e imprima no console apenas as soluções viáveis!
+
+==============================================================================
+EXERCÍCIO 7: Dimensionamento de Frota de Robôs de Logística
+Objetivo: Projetar e implementar do zero uma classe de Otimização Multiobjetivo usando pymoo para resolver um problema real de automação industrial, sem esqueletos de código fornecidos.
+
+Especificação do Cenário de Negócio
+Uma grande central de e-commerce precisa definir o dimensionamento da sua frota de robôs móveis autônomos (AMRs) no galpão de triagem. A operação exige equilibrar o investimento financeiro com a eficiência operacional.
+
+Você deve criar o modelo matematicamente e codificá-lo  em Python (frota_robos_problem.py).
+
+Variáveis de Decisão (X)
+	x_1 (Número de Robôs na Frota): Valor contínuo no intervalo [5,50].
+	x_2 (Velocidade Média de Operação): Valor contínuo no intervalo [1.0,4.0]" m/s" .
+
+Objetivos a Minimizar (F)
+	Objetivo 1 — Custo Total de Aquisição e Manutenção (f_1em R$ mil):
+f_1 (x_1,x_2 )=(x_1×25.0)+(x_2^2×8.0)
+(Mais robôs aumentam o custo fixo; velocidades maiores exigem motores mais caros e geram mais desgaste).
+	Objetivo 2 — Tempo Médio de Ciclo por Entrega (f_2 em minutos):
+f_2 (x_1,x_2 )=120.0/x_1 +40.0/x_2 
+(Aumentar a frota ou a velocidade reduz o tempo de ciclo).
+
+Restrição de Operação (G)
+	Restrição de Bateria/Segurança (g_1): A taxa de consumo energético calculada por C(x_1,x_2 )=x_1×x_2^1.5 não pode exceder 120.0 unidades.(Dica: No pymoo, restrições de desigualdade devem ser formatadas como g_1 (x)≤0).
+
+Missão:
+	Implementar a classe FrotaRobosProblem herdando de ElementwiseProblem do pymoo.
+	Configurar o algoritmo NSGA-II com população de 40 indivíduos e rodar por 60 gerações.
+	Filtrar e exibir no console as 3 melhores soluções de trade-off (menor custo, menor tempo e solução intermediária).
+	Gerar e salvar o gráfico com a Fronteira de Pareto resultante.
+
