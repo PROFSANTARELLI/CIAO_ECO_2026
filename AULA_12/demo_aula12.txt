@@ -1,6 +1,7 @@
 # LABORATÓRIO - NSGA-II: Otimização Multiobjetivo com Python e pymoo
 
-Objetivo: desenvolver um programa que encontre diferentes alternativas para distribuir a carga de processamento entre cinco servidores, considerando dois objetivos simultâneos:
+Objetivo: desenvolver um programa que encontre diferentes alternativas para distribuir a carga de processamento entre cinco servidores,
+considerando dois objetivos simultâneos:
  - minimizar o custo operacional e minimizar a latência.
 
 Cenário: Uma empresa possui cinco servidores e precisa distribuir entre eles 100% da carga de processamento de uma aplicação.
