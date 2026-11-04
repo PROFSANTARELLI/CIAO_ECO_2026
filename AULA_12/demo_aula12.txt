@@ -1,0 +1,401 @@
+# LABORATÓRIO - NSGA-II: Otimização Multiobjetivo com Python e pymoo
+
+Objetivo: desenvolver um programa que encontre diferentes alternativas para distribuir a carga de processamento entre cinco servidores, considerando dois objetivos simultâneos:
+ - minimizar o custo operacional e minimizar a latência.
+
+Cenário: Uma empresa possui cinco servidores e precisa distribuir entre eles 100% da carga de processamento de uma aplicação.
+
+Construremos um problema com duas funções objetivo e uma restrição.
+
+O NSGA-II explora diferentes distribuições de carga e procurará manter soluções eficientes, considerando dominância e diversidade.
+O resultado não será uma única resposta definitiva, mas um conjunto de alternativas que permite à empresa tomar uma decisão conforme suas prioridades.
+O algoritmo encontra as alternativas. A empresa decidirá qual delas atende melhor às suas necessidades.
+
+  Cada servidor possui características diferentes:
+
+| Servidor | Custo estimado (R$/h) | Latência (ms) |
+| 1        | 1,20                  | 45            |
+| 2        | 2,50                  | 12            |
+| 3        | 0,80                  | 80            |
+| 4        | 3,00                  | 8             |
+| 5        | 1,50                  | 30            |
+
+Observe que o servidor 3 é o mais barato, mas apresenta latência elevada. Já o servidor 4 possui a menor latência, mas apresenta o maior custo.
+
+Desafio: encontrar diferentes distribuições de carga que equilibrem esses dois objetivos.
+
+Preparando o ambiente - Instale as bibliotecas necessárias:
+
+python -m pip install numpy matplotlib pymoo
+
+3. Código completo
+
+Crie um arquivo chamado `demo_nsga2.py`.
+
+# ==========================================================
+# Otimização do custo e da latência entre cinco servidores
+# ==========================================================
+
+# 1. Importação das bibliotecas
+import numpy as np
+import matplotlib.pyplot as plt
+
+from pymoo.core.problem import ElementwiseProblem
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.operators.sampling.rnd import FloatRandomSampling
+from pymoo.operators.crossover.sbx import SBX
+from pymoo.operators.mutation.pm import PM
+from pymoo.optimize import minimize
+
+
+# ==========================================================
+# 2. DEFINIÇÃO DO PROBLEMA DE OTIMIZAÇÃO
+# ==========================================================
+
+class DistribuicaoCargaProblem(ElementwiseProblem):
+
+    def __init__(self):
+
+        super().__init__(
+            n_var=4,             # Quatro variáveis de decisão
+            n_obj=2,              # Dois objetivos
+            n_ieq_constr=1,       # Uma restrição
+            xl=np.zeros(4),       # Limite mínimo: 0
+            xu=np.ones(4)         # Limite máximo: 1
+        )
+
+        # Custo estimado de cada servidor
+        self.custos = np.array([
+            1.2, 2.5, 0.8, 3.0, 1.5
+        ])
+
+        # Latência estimada de cada servidor
+        self.latencias = np.array([
+            45, 12, 80, 8, 30
+        ])
+
+
+    # ======================================================
+    # 3. AVALIAÇÃO DE CADA SOLUÇÃO
+    # ======================================================
+
+    def _evaluate(self, x, out, *args, **kwargs):
+
+        # Os quatro primeiros servidores recebem as porcentagens definidas pelas variáveis x.
+        # O quinto servidor recebe o restante da carga.
+        carga_servidor_5 = max(0.0, 1.0 - np.sum(x))
+
+        # Monta o vetor com a distribuição dos cinco servidores.
+        cargas = np.append(x, carga_servidor_5)
+
+        # OBJETIVO 1: minimizar o custo operacional.
+        custo_total = np.sum(cargas * self.custos)
+
+        # OBJETIVO 2: minimizar a latência média.
+        latencia_media = np.sum(cargas * self.latencias)
+
+        # RESTRIÇÃO: a soma das quatro primeiras cargas não pode ultrapassar 100% (1.0).
+        restricao = np.sum(x) - 1.0
+
+        # Entrega os dois objetivos ao NSGA-II.
+        out["F"] = [custo_total, latencia_media]
+
+        # Entrega a restrição ao algoritmo. No pymoo, uma restrição é satisfeita quando G <= 0.
+        out["G"] = [restricao]
+
+# 4. CRIAÇÃO DO PROBLEMA
+problem = DistribuicaoCargaProblem()
+
+# 5. CONFIGURAÇÃO DO ALGORITMO NSGA-II
+
+algorithm = NSGA2(
+    pop_size=200,
+    sampling=FloatRandomSampling(),
+    crossover=SBX(
+        prob=0.9,
+        eta=15
+    ),
+    mutation=PM(
+        prob=0.1,
+        eta=20
+    ),
+    eliminate_duplicates=True
+)
+
+# 6. EXECUÇÃO DA OTIMIZAÇÃO
+          
+resultado = minimize(
+
+    problem,
+    algorithm,
+    ("n_gen", 150),
+    seed=42,
+    verbose=False
+)
+
+# 7. APRESENTAÇÃO DOS RESULTADOS
+
+if resultado.X is None or resultado.F is None:
+    raise RuntimeError("Nenhuma solução viável foi encontrada.")
+
+# Garante que os resultados estejam organizados como matrizes.
+X = np.atleast_2d(resultado.X)
+F = np.atleast_2d(resultado.F)
+
+print("      RESULTADOS DA OTIMIZAÇÃO NSGA-II")
+print(f"Soluções não dominadas: {len(F)}")
+
+# Ordena as soluções pelo custo crescente.
+ordem = np.argsort(F[:, 0])
+
+# Apresenta até dez soluções encontradas.
+for posicao, indice in enumerate(ordem[:10], start=1):
+
+    # Recupera os quatro valores de decisão.
+    x = X[indice]
+
+    # Calcula a carga destinada ao quinto servidor.
+    carga_5 = max(0.0, 1.0 - np.sum(x))
+
+    # Reconstrói a distribuição completa.
+    cargas = np.append(x, carga_5)
+
+    # Converte as proporções para porcentagens.
+    percentuais = cargas * 100
+
+    custo, latencia = F[indice]
+
+    print(f"\nSolução {posicao}")
+    print(f"Distribuição: {np.round(percentuais, 1)}")
+    print(f"Custo: US$ {custo:.2f}/h")
+    print(f"Latência: {latencia:.2f} ms")
+
+# 8. VISUALIZAÇÃO DA FRONTEIRA DE PARETO
+
+plt.figure(figsize=(9, 6))
+plt.scatter(
+    F[:, 0],
+    F[:, 1],
+    s=35,
+    label="Soluções não dominadas"
+)
+
+plt.xlabel("Custo estimado (US$/h)")
+plt.ylabel("Latência média (ms)")
+plt.title("NSGA-II - Aproximação da Fronteira de Pareto")
+plt.grid(True, alpha=0.3)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
+
+
+
+
+          
+
+          
+          
+
+          
+          
+          
+          
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+Definição do problema**
+
+class DistribuicaoCargaProblem(ElementwiseProblem):
+Criamos uma classe chamada `DistribuicaoCargaProblem`.
+
+Ela herda de `ElementwiseProblem`, do pymoo, para permitir que cada solução seja avaliada individualmente.
+
+Temos quatro variáveis de decisão. Elas representam as porcentagens de carga destinadas aos servidores 1, 2, 3 e 4.
+
+O servidor 5 receberá automaticamente o percentual restante. Exemplo:
+
+x = [0.20, 0.30, 0.10, 0.15]
+
+Isso significa:
+
+- Servidor 1: 20%.
+- Servidor 2: 30%.
+- Servidor 3: 10%.
+- Servidor 4: 15%.
+- Servidor 5: 25%.
+
+Total: 100%.
+
+n_obj=2
+
+Define que o problema possui dois objetivos:
+
+1. Minimizar custo.
+2. Minimizar latência.
+
+n_ieq_constr=1
+Define uma restrição de desigualdade: a soma das quatro primeiras cargas não pode ultrapassar 100%.
+
+xl=np.zeros(4)
+xu=np.ones(4)
+Define os limites das variáveis. Cada uma pode variar entre 0 e 1, ou seja, entre 0% e 100%.
+
+Avaliação dos objetivos**
+
+def _evaluate(self, x, out, *args, **kwargs):
+Esta função é chamada pelo pymoo para avaliar cada solução candidata. O vetor `x` representa a distribuição proposta pelo algoritmo.
+
+carga_servidor_5 = max(0.0, 1.0 - np.sum(x))
+Calcula o percentual restante para o quinto servidor.
+O `max()` evita que a carga do quinto servidor fique negativa quando uma solução viola a restrição.
+
+cargas = np.append(x, carga_servidor_5)
+Junta os quatro valores de decisão ao percentual calculado para formar o vetor dos cinco servidores.
+
+custo_total = np.sum(cargas * self.custos)
+Calcula o custo estimado da distribuição.
+Multiplicamos a carga de cada servidor pelo seu respectivo custo e somamos os resultados.
+
+latencia_media = np.sum(cargas * self.latencias)
+Calcula a latência média estimada, ponderada pela proporção de carga atribuída a cada servidor.
+
+restricao = np.sum(x) - 1.0
+Verifica se a soma das quatro primeiras cargas ultrapassa 100%.
+
+out["F"] = [custo_total, latencia_media]
+Entrega os dois objetivos calculados ao NSGA-II.
+
+out["G"] = [restricao]
+Entrega a restrição.
+No pymoo, as restrições de desigualdade precisam resultar em valores menores ou iguais a zero para serem satisfeitas.
+
+Configuração do NSGA-II
+algorithm = NSGA2(pop_size=200)
+Define uma população de 200 indivíduos, ou seja, 200 configurações candidatas de distribuição.
+
+sampling=FloatRandomSampling()
+Gera as soluções iniciais com valores reais aleatórios.
+
+crossover=SBX(prob=0.9, eta=15)
+Configura o cruzamento SBX.
+`prob=0.9`: probabilidade de 90% de realizar o cruzamento.
+`eta=15`: controla a distribuição dos valores gerados pelo operador.
+
+mutation=PM(prob=0.1, eta=20)
+Configura a mutação polinomial.
+
+`prob=0.1`: probabilidade de aplicação do operador de mutação.
+`eta=20`: controla a intensidade e a distribuição das alterações.
+
+eliminate_duplicates=True
+Evita manter indivíduos com vetores de decisão duplicados na população.
+
+Execução
+resultado = minimize(
+    problem,
+    algorithm,
+    ("n_gen", 150),
+    seed=42,
+    verbose=False
+)
+Aqui acontece a otimização.
+- `problem`: informa qual problema precisa ser resolvido.
+- `algorithm`: informa que será utilizado o NSGA-II.
+- `("n_gen", 150)`: determina o limite de 150 gerações.
+- `seed=42`: fixa a semente aleatória para facilitar a reprodução da execução.
+- `verbose=False`: desativa as mensagens detalhadas de cada geração.
+Durante as gerações, o NSGA-II avalia as soluções, realiza a ordenação por dominância, utiliza a Crowding Distance e evolui a população.
+
+Resultados
+
+X = np.atleast_2d(resultado.X)
+F = np.atleast_2d(resultado.F)
+Separa os dois principais resultados da otimização:
+- `X`: configurações de distribuição encontradas.
+- `F`: valores dos objetivos correspondentes a essas configurações.
+
+ordem = np.argsort(F[:, 0])
+
+Organiza as soluções pelo custo crescente.
+
+custo, latencia = F[indice]
+Recupera os dois objetivos de uma solução específica.
+O programa apresenta até dez alternativas, com suas distribuições de carga, custos e latências.
+
+Gráfico
+plt.scatter(F[:, 0], F[:, 1])
+Cria um gráfico de dispersão.
+Cada ponto representa uma solução não dominada encontrada pelo algoritmo.
+O eixo horizontal representa o custo.
+O eixo vertical representa a latência.
+O resultado visual permite observar o equilíbrio entre os objetivos.
+
+O que esperamos encontrar como resultado?
+Ao executar o programa, esperamos encontrar um conjunto de soluções não dominadas, e não apenas uma solução vencedora.
+A tendência dos resultados será:
+
+| Tipo de solução | Comportamento esperado |
+|---|---|
+| Menor custo | Maior participação do servidor 3 |
+| Menor latência | Maior participação do servidor 4 |
+| Soluções intermediárias | Distribuição entre servidores com características diferentes |
+
+Os extremos teóricos deste modelo são:
+
+**Configuração de menor custo:**
+
+100% da carga no servidor 3.
+
+Custo estimado: US$ 0,80/h.
+
+Latência estimada: 80 ms.
+
+**Configuração de menor latência:**
+
+100% da carga no servidor 4.
+
+Custo estimado: US$ 3,00/h.
+
+Latência estimada: 8 ms.
+
+Entre esses extremos, o NSGA-II procura diferentes combinações que representam compromissos entre custo e desempenho.
+
+O gráfico deverá apresentar uma região de soluções não dominadas, com tendência descendente: à medida que o custo aumenta, a latência diminui.
+
+**Importante:** esses resultados são referências teóricas do modelo. A execução do algoritmo encontra uma aproximação da fronteira, e não necessariamente todos os pontos extremos ou a Fronteira de Pareto exata.
+
+### 6. Interpretando o resultado
+
+Depois da execução, responda:
+
+1. Qual configuração apresenta o menor custo?
+2. Qual configuração apresenta a menor latência?
+3. Por que a solução de menor custo não é necessariamente a melhor para a empresa?
+4. O que representa cada ponto apresentado no gráfico?
+5. Por que o NSGA-II retorna várias soluções em vez de apenas uma?
+6. Qual é a função da Crowding Distance durante a otimização?
