@@ -12,11 +12,12 @@ Agora pense:
  - Se você direcionar toda a carga para os servidores mais baratos, o que pode acontecer? - Talvez eles não tenham o melhor desempenho e o sistema fique lento.
  - E se você direcionar toda a carga para os servidores mais rápidos? - Provavelmente o custo operacional aumentará.
 
-Perceba o problema: melhorar um objetivo pode prejudicar o outro. É exatamente esse tipo de situação que queremos resolver com a Otimização Multiobjetivo.
+Problema: melhorar um objetivo pode prejudicar o outro.
+É exatamente esse tipo de situação que queremos resolver com a Otimização Multiobjetivo.
 
 2. O que é Otimização Multiobjetivo?
 
-Primeiro, precisamos entender a diferença entre duas formas de otimização.
+Primeiro, vamos entender a diferença entre duas formas de otimização.
 
 **Otimização Mono-objetivo**
 Existe apenas um objetivo principal. Exemplo: encontrar a rota de menor custo para realizar uma entrega.
@@ -50,7 +51,6 @@ Observe:
 - B oferece um equilíbrio entre os dois objetivos.
 
 Qual é a melhor?
-
 Resposta: Depende da necessidade da empresa.
  - Se a prioridade for economizar, A pode ser interessante.
  - Se a prioridade for velocidade, C pode ser a melhor escolha.
@@ -58,9 +58,7 @@ Resposta: Depende da necessidade da empresa.
 
 Não existe uma resposta universalmente melhor. Existe uma solução mais adequada às prioridades do negócio. Essa relação entre objetivos é chamada de Trade-off.
 
-
 4. O que é Dominância de Pareto?
-
 Imagine que temos estas quatro configurações:
 
 | Solução | Custo | Latência |
@@ -102,10 +100,9 @@ Essa escolha depende das prioridades do negócio.
 
 Agora surge uma questão:
 - Se temos milhares ou milhões de combinações possíveis de distribuição de recursos, como encontrar boas alternativas sem testar todas elas?
-
 É aqui que entra o NSGA-II.
 
-NSGA-II significa: Non-dominated Sorting Genetic Algorithm II - Em português: Algoritmo Genético II baseado em Ordenação por Não-Dominância.
+NSGA-II - Non-dominated Sorting Genetic Algorithm II (Algoritmo Genético II baseado em Ordenação por Não-Dominância).
 
 Ele é um algoritmo evolutivo multiobjetivo. Sua lógica aproveita conceitos dos Algoritmos Genéticos, mas utiliza mecanismos específicos para trabalhar com vários objetivos simultaneamente.
 Em vez de procurar apenas uma solução vencedora, ele trabalha com uma população de soluções e procura construir uma boa aproximação da Fronteira de Pareto.
@@ -113,11 +110,9 @@ Em vez de procurar apenas uma solução vencedora, ele trabalha com uma populaç
 Vamos imaginar que o computador precise encontrar a melhor distribuição de carga entre cinco servidores. O processo ocorre em etapas.
 
 **ETAPA 1: Criar uma população inicial**
-
 O algoritmo cria várias possibilidades de distribuição da carga. Cada indivíduo representa uma configuração diferente.
 
 Exemplo:
-
 solucao_A = [20, 20, 20, 20, 20]
 solucao_B = [40, 10, 20, 10, 20]
 solucao_C = [10, 40, 10, 20, 20]
@@ -138,11 +133,10 @@ O NSGA-II compara as soluções e organiza os indivíduos em grupos chamados *Fr
 O primeiro Front representa as melhores soluções segundo o critério de dominância.
 
 **ETAPA 4: Calcular a Crowding Distance**
-Aqui temos outro conceito importante.nImagine que o algoritmo encontrou dez soluções muito boas, mas todas estão praticamente no mesmo ponto do gráfico.
-
+Aqui temos outro conceito importante. Imagine que o algoritmo encontrou dez soluções muito boas, mas todas estão praticamente no mesmo ponto do gráfico.
 Isso não seria interessante, pois teríamos pouca variedade de alternativas. A Crowding Distance, ou distância de aglomeração, ajuda a preservar a diversidade das soluções.
-
-Ela favorece indivíduos que estão em regiões menos ocupadas da fronteira. Em palavras simples: O NSGA-II procura manter soluções boas, mas também procura manter soluções diferentes entre si.
+Ela favorece indivíduos que estão em regiões menos ocupadas da fronteira.
+Em palavras simples: O NSGA-II procura manter soluções boas, mas também procura manter soluções diferentes entre si.
 
 **ETAPA 5: Evoluir a população**
 O algoritmo utiliza operadores evolutivos:
@@ -156,15 +150,12 @@ O algoritmo organiza novamente as soluções por dominância e diversidade, sele
 Esse processo se repete até atingir o critério de parada, como uma quantidade definida de gerações.
 
 **ETAPA 7: Apresentar a Fronteira de Pareto**
-
 Ao final, o algoritmo retorna um conjunto de soluções não dominadas encontradas durante a otimização. O resultado é uma aproximação da Fronteira de Pareto.
-
 A empresa poderá analisar as alternativas e escolher aquela que melhor atende às suas prioridades.
 
 
-O que é o pymoo?
+PYMOO
 O pymoo é um framework Python que disponibiliza algoritmos de otimização mono e multiobjetivo, incluindo o NSGA-II.
-
 Em vez de programarmos toda a matemática do algoritmo, utilizamos a biblioteca e concentramos nosso desenvolvimento na definição do problema.
 
 Para usar o pymoo, precisamos fornecer três informações principais:
@@ -198,8 +189,7 @@ solucoes = resultado.X
 objetivos = resultado.F
 ```
 
-Vamos entender:
-
+Compreensão:
 - `NSGA2`: seleciona o algoritmo que será utilizado.
 - `pop_size=100`: define uma população de 100 indivíduos.
 - `problem`: representa o problema que desenvolvemos.
