@@ -1,0 +1,38 @@
+AULA 13 - CIAO
+
+================================================
+CALENDÁRIO RETA FINAL:
+================================================
+18/11 - AC-4 parte final
+
+25/11 - Prova Semestral (valor 3,0 pontos)
+
+02/12 - Vista de Prova
+
+09/12 - Prova Exame
+
+================================================
+INFORMAÇÕES DA PROVA SEMESTRAL INDIVIDUAL
+================================================
+
+1 - Serão 6 questões técnicas com 3 versões diferentes.
+
+2 - Será no computador do laboratório e sem consulta.
+
+3 - Foquem estudos nas aulas de 6 à 12.
+
+4 - Refaçam atividades e use a IA como fonte de estudo apenas.
+
+OBS: É obrigatório utilizar o computador do laboratório para realização da prova.
+
+A prova inicia 19:10 com os alunos que estiverem em sala.
+
+Alunos que chegarem após, devem aguardar fora da sala liberação de computador, caso não tenha mais nenhum disponível.
+
+================================================
+PROGRAMAÇÃO AULA 13
+================================================
+
+1 - Breve revisão dos itens de estudo que podem cair na prova.
+
+2 - Execução e entrega da AC-4 etapa final
